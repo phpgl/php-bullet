@@ -1,0 +1,7 @@
+ARG_ENABLE('bullet3', 'bullet3 support', 'no');
+
+if (PHP_BULLET3 != 'no') {
+	AC_DEFINE('HAVE_BULLET3', 1, 'bullet3 support enabled');
+
+	EXTENSION('bullet3', 'bullet3.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}

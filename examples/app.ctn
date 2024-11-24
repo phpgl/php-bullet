@@ -1,0 +1,24 @@
+/**
+ * This is the application's main container file. In other words, 
+ * it's the place where you want to specify your parameters and services. 
+ * 
+ * By default, all container files located in the `/app` directory are added
+ * to the current namespace. This means that you can easily import these files
+ * anywhere in your code by using the `import app/myfile` syntax.
+ */
+:project.name: 'php-bullet-physics-examples'
+
+/**
+ * Shader storage 
+ */
+@shaders: VISU\Graphics\ShaderCollection(@gl, :visu.path.resources.shader)
+    - enableVISUIncludes()
+    - addVISUShaders()
+    - scanShaderDirectory(:visu.path.resources.shader)
+
+
+/**
+ * Model collection and loading 
+ */
+@models: VISU\System\VISULowPoly\LPModelCollection
+@models.loader: VISU\System\VISULowPoly\LPObjLoader(@gl)
