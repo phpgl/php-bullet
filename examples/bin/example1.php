@@ -10,6 +10,7 @@ $quickstart = new Quickstart(function(QuickstartOptions $options) use ($containe
     $options->appClass = \App\AppExample1::class;
     $options->container = $container;
     $options->windowTitle = $container->getParameter('project.name'); // defined in: /app.ctn 
+    $options->gameLoopTickRate = 60.0;
 });
 
 $quickstart->run();

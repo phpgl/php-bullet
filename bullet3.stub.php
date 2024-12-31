@@ -17,10 +17,25 @@ class World
     public function stepSimulation(float $timeStep, int $maxSubSteps = 1, float $fixedTimeStep = 0.01666666): void {}
 }
 
+interface CollisionShape
+{
+}
+
+class SphereShape implements CollisionShape
+{
+    public function __construct(float $radius) {}
+}
+
 class RigidBody
 {
+    public CollisionShape $collisionShape;
+
+    public function __construct(CollisionShape $collisionShape, float $mass = 0.0) {}
+
     public function setPosition(\GL\Math\Vec3 $position): void {}
     public function getPosition(): \GL\Math\Vec3 {}
+    public function getLinearVelocity(): \GL\Math\Vec3 {}
+    public function getAngularVelocity(): \GL\Math\Vec3 {}
     public function getOrientation(): \GL\Math\Quat {}
     public function setMass(float $mass): void {}
     public function getTransform(): \GL\Math\Mat4 {}

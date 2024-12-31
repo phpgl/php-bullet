@@ -27,8 +27,56 @@
 #include "bullet3_arginfo.h"
 #include "glfw/phpglfw_math.h"
 
+#define PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(type_lower) \
+    zend_class_entry *phpbullet3_##type_lower##_ce; \
+    \
+    zend_class_entry *phpbullet3_get_##type_lower##_ce() \
+    { \
+        return phpbullet3_##type_lower##_ce; \
+    } \
+    zend_always_inline phpbullet3_##type_lower##_object *phpbullet3_##type_lower##_from_zobj_p(zend_object *obj) \
+    { \
+        return (phpbullet3_##type_lower##_object*)((char*)(obj) - XtOffsetOf(phpbullet3_##type_lower##_object, std)); \
+    } \
+    static zend_object_handlers phpbullet3_##type_lower##_object_handlers; \
+    \
+    zend_object *phpbullet3_##type_lower##_create_object(zend_class_entry *class_type) \
+    { \
+        phpbullet3_##type_lower##_object *intern; \
+        intern = zend_object_alloc(sizeof(phpbullet3_##type_lower##_object), class_type); \
+        \
+        zend_object_std_init(&intern->std, class_type); \
+        object_properties_init(&intern->std, class_type); \
+        \
+        intern->std.handlers = &phpbullet3_##type_lower##_object_handlers; \
+        intern->bt_shape = NULL; \
+        \
+        return &intern->std; \
+    } \
+    static void phpbullet3_##type_lower##_free_handler(zend_object *object) \
+    { \
+        phpbullet3_##type_lower##_object *intern = phpbullet3_##type_lower##_from_zobj_p(object); \
+        \
+        if (intern->bt_shape != NULL) { \
+            btCollisionShape_destroy(intern->bt_shape); \
+        } \
+        \
+        zend_object_std_dtor(&intern->std); \
+    }
+    \
+
+#define PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(class, type_lower) \
+    phpbullet3_##type_lower##_ce = register_class_##class(phpbullet3_collision_shape_ce); \
+    phpbullet3_##type_lower##_ce->create_object = phpbullet3_##type_lower##_create_object; \
+    \
+    memcpy(&phpbullet3_##type_lower##_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers)); \
+    phpbullet3_##type_lower##_object_handlers.offset = XtOffsetOf(phpbullet3_##type_lower##_object, std); \
+    phpbullet3_##type_lower##_object_handlers.free_obj = phpbullet3_##type_lower##_free_handler;
+
+
 zend_class_entry *phpbullet3_world_ce;
 zend_class_entry *phpbullet3_rigidbody_ce;
+zend_class_entry *phpbullet3_collision_shape_ce;
 
 zend_class_entry *phpbullet3_get_world_ce()
 {
@@ -38,6 +86,11 @@ zend_class_entry *phpbullet3_get_world_ce()
 zend_class_entry *phpbullet3_get_rigidbody_ce()
 {
     return phpbullet3_rigidbody_ce;
+}
+
+zend_class_entry *phpbullet3_get_collision_shape_ce()
+{
+    return phpbullet3_collision_shape_ce;
 }
 
 zend_always_inline phpbullet3_world_object *phpbullet3_world_from_zobj_p(zend_object *obj)
@@ -52,6 +105,9 @@ zend_always_inline phpbullet3_rigidbody_object *phpbullet3_rigidbody_from_zobj_p
 
 static zend_object_handlers phpbullet3_world_object_handlers;
 static zend_object_handlers phpbullet3_rigidbody_object_handlers;
+
+// shapes
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_sphere);
 
 /**
  * Bullet\World
@@ -153,6 +209,28 @@ PHP_METHOD(Bullet_World, stepSimulation)
 }
 
 /**
+ * Bullet\CollisionShape
+ * 
+ * ----------------------------------------------------------------------------
+ * The collision shape constrcutors
+ */
+
+/**
+ * Bullet\SphereShape::__construct
+ */
+PHP_METHOD(Bullet_SphereShape, __construct)
+{
+    double radius;
+    phpbullet3_shape_sphere_object *intern = phpbullet3_shape_sphere_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "d", &radius) == FAILURE) {
+        return;
+    }
+
+    intern->bt_shape = btCollisionShape_create_sphere(radius);
+}
+
+/**
  * Bullet\RigidBody
  * 
  * ----------------------------------------------------------------------------
@@ -166,7 +244,6 @@ zend_object *phpbullet3_rigidbody_create_object(zend_class_entry *class_type)
     object_properties_init(&intern->std, class_type);
 
     intern->std.handlers = &phpbullet3_rigidbody_object_handlers;
-    intern->bt_rigidbody = btRigidBody_create_sphere(1.0f, 1.0f);
 
     return &intern->std;
 }
@@ -180,6 +257,26 @@ static void phpbullet3_rigidbody_free_handler(zend_object *object)
     }
 
     zend_object_std_dtor(&intern->std);
+}
+
+/**
+ * Bullet\RigidBody::__construct
+ */
+PHP_METHOD(Bullet_RigidBody, __construct)
+{
+    zval *shape;
+    double mass = 1.0f;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O|d", &shape, phpbullet3_get_collision_shape_ce(), &mass) == FAILURE) {
+        return;
+    }
+
+    phpbullet3_shape_sphere_object *shape_ptr = phpbullet3_shape_sphere_from_zobj_p(Z_OBJ_P(shape));
+    intern->bt_rigidbody = btRigidBody_create(shape_ptr->bt_shape, mass);
+
+    // also assign the collisionShape property
+    zend_update_property(phpbullet3_rigidbody_ce, Z_OBJ_P(getThis()), "collisionShape", sizeof("collisionShape") - 1, shape);
 }
 
 /**
@@ -210,8 +307,35 @@ PHP_METHOD(Bullet_RigidBody, getPosition)
     object_init_ex(return_value, phpglfw_get_math_vec3_ce());
     phpglfw_math_vec3_object *vec_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(return_value));
 
-    // read the position from the rigidbody
     btRigidBody_getPosition(intern->bt_rigidbody, &vec_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::getLinearVelocity
+ */
+PHP_METHOD(Bullet_RigidBody, getLinearVelocity)
+{
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    // construct a vec3 object
+    object_init_ex(return_value, phpglfw_get_math_vec3_ce());
+    phpglfw_math_vec3_object *vec_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(return_value));
+
+    btRigidBody_getLinearVelocity(intern->bt_rigidbody, &vec_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::getAngularVelocity
+ */
+PHP_METHOD(Bullet_RigidBody, getAngularVelocity)
+{
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    // construct a vec3 object
+    object_init_ex(return_value, phpglfw_get_math_vec3_ce());
+    phpglfw_math_vec3_object *vec_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(return_value));
+
+    btRigidBody_getAngularVelocity(intern->bt_rigidbody, &vec_ptr->data);
 }
 
 /**
@@ -281,4 +405,10 @@ void phpbullet3_register_world_module(INIT_FUNC_ARGS)
     memcpy(&phpbullet3_rigidbody_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
     phpbullet3_rigidbody_object_handlers.offset = XtOffsetOf(phpbullet3_rigidbody_object, std);
     phpbullet3_rigidbody_object_handlers.free_obj = phpbullet3_rigidbody_free_handler;
+
+    // shape interface
+    phpbullet3_collision_shape_ce = register_class_Bullet_CollisionShape();
+
+    // collision shape
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_SphereShape, shape_sphere);
 }

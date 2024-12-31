@@ -31,25 +31,6 @@ PHP_MINIT_FUNCTION(bullet3)
 PHP_FUNCTION(Bullet_bullet3_test)
 {
     ZEND_PARSE_PARAMETERS_NONE();
-
-    btDynamicsWorldWrapper* world = btDynamicsWorld_create();
-    btRigidBodyWrapper* sphere = btRigidBody_create_sphere(1.0f, 1.0f);
-
-    btDynamicsWorld_addRigidBody(world, sphere);
-
-    int numSteps = 300;
-    float timeStep = 1.0f / 60.0f;
-
-    float x, y, z;
-    for (int i = 0; i < numSteps; ++i) {
-        btDynamicsWorld_stepSimulation(world, timeStep);
-        // Optionally, you can collect or output the position data here
-    }
-
-    btRigidBody_destroy(sphere);
-    btDynamicsWorld_destroy(world);
-
-    RETURN_STRING("Bullet3 physics simulation ran successfully.");
 }
 /* }}} */
 

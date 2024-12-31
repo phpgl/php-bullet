@@ -3,6 +3,7 @@
 namespace App;
 
 use Bullet\RigidBody;
+use Bullet\SphereShape;
 use Bullet\World;
 use Error;
 use GL\Math\Vec2;
@@ -120,12 +121,12 @@ class AppExample1 extends QuickstartApp
         $this->physicsWorld = new World();
         $this->physicsWorld->setGravity(new Vec3(0, -9.81, 0));
 
+        $shpereShape = new SphereShape(1);
 
-        for ($i = 0; $i < 1000; $i++) 
+        for ($i = 0; $i < 500; $i++) 
         {
             $entity = $this->entities->create();
-            $rigidbody = new RigidBody();
-            $rigidbody->setMass(5);
+            $rigidbody = new RigidBody($shpereShape, 5);
             $rigidbody->setPosition(new Vec3(mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100)));
 
             $model = $this->entities->attach($entity, new DynamicRenderableModel());
@@ -167,6 +168,15 @@ class AppExample1 extends QuickstartApp
      */
     public function draw(RenderContext $context, RenderTarget $renderTarget) : void
     {
+        // update the position of the entities
+        foreach ($this->entities->view(RigidBody::class) as $entity => $rigidbody) {
+            $transform = $this->entities->get($entity, Transform::class);
+
+            $position = $rigidbody->getPosition();
+            $position = $position + ($rigidbody->getLinearVelocity() * 1 / 60) * $context->compensation;
+
+            $transform->setPosition($position);
+        }
     }
 
     /**
@@ -183,6 +193,13 @@ class AppExample1 extends QuickstartApp
         parent::update();
 
         $this->cameraSystem->update($this->entities);
+
+        // randomly delete a rigidbody
+        if (mt_rand(0, 100) < 5) {
+            if ($entity = $this->entities->firstWith(RigidBody::class)) {
+                $this->entities->destroy($entity);
+            }
+        }
 
         // handle key presses
         // if ($this->inputContext->actions->didButtonPress('bounce')) {

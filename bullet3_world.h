@@ -29,6 +29,16 @@
 #include <php.h>
 #include "bullet3_bridge.h"
 
+#define PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(type_lower)                                  \
+    typedef struct _phpbullet3_##type_lower##_object {                                        \
+        btCollisionShapeWrapper *bt_shape;                                                    \
+        zend_object std;                                                                      \
+    } phpbullet3_##type_lower##_object;                                                       \
+                                                                                              \
+    zend_class_entry *phpbullet3_get_##type_lower##_ce();                                     \
+                                                                                              \
+    phpbullet3_##type_lower##_object *phpbullet3_##type_lower##_from_zobj_p(zend_object *obj);\
+
 typedef struct _phpbullet3_world_object {
     btDynamicsWorldWrapper *bt_world;
     zend_object std;
@@ -41,9 +51,12 @@ typedef struct _phpbullet3_rigidbody_object {
 
 zend_class_entry *phpbullet3_get_world_ce();
 zend_class_entry *phpbullet3_get_rigidbody_ce();
+zend_class_entry *phpbullet3_get_collision_shape_ce();
 
 phpbullet3_world_object *phpbullet3_world_from_zobj_p(zend_object *obj);
 phpbullet3_rigidbody_object *phpbullet3_rigidbody_from_zobj_p(zend_object *obj);
+
+PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_sphere);
 
 void phpbullet3_register_world_module(INIT_FUNC_ARGS);
 
