@@ -172,6 +172,7 @@ void btRigidBody_setMass(btRigidBodyWrapper *body, float mass)
 
 void btDynamicsWorld_addRigidBody(btDynamicsWorldWrapper *worldWrapper, btRigidBodyWrapper *bodyWrapper) {
     worldWrapper->dynamicsWorld->addRigidBody(bodyWrapper->rigidBody);
+    bodyWrapper->assignedWorld = worldWrapper->dynamicsWorld;
 }
 
 void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *worldWrapper, float timeStep) {
