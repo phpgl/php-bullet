@@ -118,12 +118,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpgl/visu.git",
-                "reference": "b53b1cc30686c714621bd719f30587bcdc4a29a7"
+                "reference": "63161fe50617a8bf2078d91791d9147edf41d506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpgl/visu/zipball/b53b1cc30686c714621bd719f30587bcdc4a29a7",
-                "reference": "b53b1cc30686c714621bd719f30587bcdc4a29a7",
+                "url": "https://api.github.com/repos/phpgl/visu/zipball/63161fe50617a8bf2078d91791d9147edf41d506",
+                "reference": "63161fe50617a8bf2078d91791d9147edf41d506",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +161,7 @@
                 "issues": "https://github.com/phpgl/visu/issues",
                 "source": "https://github.com/phpgl/visu/tree/master"
             },
-            "time": "2024-09-09T21:40:57+00:00"
+            "time": "2024-12-31T15:32:19+00:00"
         },
         {
             "name": "psr/log",

@@ -108,6 +108,7 @@ static zend_object_handlers phpbullet3_rigidbody_object_handlers;
 
 // shapes
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_sphere);
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_static_plane);
 
 /**
  * Bullet\World
@@ -228,6 +229,23 @@ PHP_METHOD(Bullet_SphereShape, __construct)
     }
 
     intern->bt_shape = btCollisionShape_create_sphere(radius);
+}
+
+/**
+ * Bullet\StaticPlaneShape::__construct
+ */
+PHP_METHOD(Bullet_StaticPlaneShape, __construct)
+{
+    zval *normal;
+    double constant = 0.0f;
+    phpbullet3_shape_static_plane_object *intern = phpbullet3_shape_static_plane_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O|d", &normal, phpglfw_get_math_vec3_ce(), &constant) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(normal));
+    intern->bt_shape = btCollisionShape_create_static_plane(&vec3_ptr->data, constant);
 }
 
 /**
@@ -411,4 +429,5 @@ void phpbullet3_register_world_module(INIT_FUNC_ARGS)
 
     // collision shape
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_SphereShape, shape_sphere);
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_StaticPlaneShape, shape_static_plane);
 }

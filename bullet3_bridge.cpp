@@ -108,6 +108,13 @@ void btDynamicsWorld_getGravity(btDynamicsWorldWrapper *world, vec3 *gravity) {
  * 
  * ----------------------------------------------------------------------------
  */
+
+void btCollisionShape_destroy(btCollisionShapeWrapper *shape)
+{
+    delete shape->shape;
+    delete shape;
+}
+
 btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius)
 {
     btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
@@ -115,10 +122,11 @@ btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius)
     return wrapper;
 }
 
-void btCollisionShape_destroy(btCollisionShapeWrapper *shape)
+btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant)
 {
-    delete shape->shape;
-    delete shape;
+    btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
+    wrapper->shape = new btStaticPlaneShape(vec3_to_btVector3(normal), constant);
+    return wrapper;
 }
 
 /**

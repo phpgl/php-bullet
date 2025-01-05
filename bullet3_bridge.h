@@ -28,8 +28,13 @@ void btDynamicsWorld_getGravity(btDynamicsWorldWrapper *world, vec3 *gravity);
  * 
  * ----------------------------------------------------------------------------
  */
-btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius);
 void btCollisionShape_destroy(btCollisionShapeWrapper *shape);
+
+// shpere
+btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius);
+
+// static plane
+btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant);
 
 /**
  * Rigid body

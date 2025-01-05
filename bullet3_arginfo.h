@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: c35cdd336c8807b751d8b40f0b8c28098017f464 */
+ * Stub hash: 7a854cd073109496616c92dfaf75572d3e17eebe */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_Bullet_bullet3_test, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
@@ -23,6 +23,11 @@ ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_SphereShape___construct, 0, 0, 1)
 	ZEND_ARG_TYPE_INFO(0, radius, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_StaticPlaneShape___construct, 0, 0, 1)
+	ZEND_ARG_OBJ_INFO(0, normal, GL\\Math\\Vec3, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, constant, IS_DOUBLE, 0, "0.0")
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_RigidBody___construct, 0, 0, 1)
@@ -57,6 +62,7 @@ ZEND_METHOD(Bullet_World, getGravity);
 ZEND_METHOD(Bullet_World, addRigidBody);
 ZEND_METHOD(Bullet_World, stepSimulation);
 ZEND_METHOD(Bullet_SphereShape, __construct);
+ZEND_METHOD(Bullet_StaticPlaneShape, __construct);
 ZEND_METHOD(Bullet_RigidBody, __construct);
 ZEND_METHOD(Bullet_RigidBody, setPosition);
 ZEND_METHOD(Bullet_RigidBody, getPosition);
@@ -89,6 +95,12 @@ static const zend_function_entry class_Bullet_CollisionShape_methods[] = {
 
 static const zend_function_entry class_Bullet_SphereShape_methods[] = {
 	ZEND_ME(Bullet_SphereShape, __construct, arginfo_class_Bullet_SphereShape___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_StaticPlaneShape_methods[] = {
+	ZEND_ME(Bullet_StaticPlaneShape, __construct, arginfo_class_Bullet_StaticPlaneShape___construct, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -130,6 +142,17 @@ static zend_class_entry *register_class_Bullet_SphereShape(zend_class_entry *cla
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Bullet", "SphereShape", class_Bullet_SphereShape_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_CollisionShape);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_StaticPlaneShape(zend_class_entry *class_entry_Bullet_CollisionShape)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "StaticPlaneShape", class_Bullet_StaticPlaneShape_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
 	zend_class_implements(class_entry, 1, class_entry_Bullet_CollisionShape);
 

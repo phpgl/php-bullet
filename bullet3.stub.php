@@ -26,6 +26,11 @@ class SphereShape implements CollisionShape
     public function __construct(float $radius) {}
 }
 
+class StaticPlaneShape implements CollisionShape
+{
+    public function __construct(\GL\Math\Vec3 $normal, float $constant = 0.0) {}
+}
+
 class RigidBody
 {
     public CollisionShape $collisionShape;
