@@ -33,6 +33,12 @@ void btCollisionShape_destroy(btCollisionShapeWrapper *shape);
 // shpere
 btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius);
 
+// box
+btCollisionShapeWrapper *btCollisionShape_create_box(vec3 *halfExtents);
+
+// cylinder
+btCollisionShapeWrapper *btCollisionShape_create_cylinder(vec3 *halfExtents);
+
 // static plane
 btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant);
 

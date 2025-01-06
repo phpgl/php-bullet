@@ -26,6 +26,16 @@ class SphereShape implements CollisionShape
     public function __construct(float $radius) {}
 }
 
+class BoxShape implements CollisionShape
+{
+    public function __construct(\GL\Math\Vec3 $halfExtents) {}
+}
+
+class CylinderShape implements CollisionShape
+{
+    public function __construct(\GL\Math\Vec3 $halfExtents) {}
+}
+
 class StaticPlaneShape implements CollisionShape
 {
     public function __construct(\GL\Math\Vec3 $normal, float $constant = 0.0) {}

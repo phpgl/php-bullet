@@ -122,6 +122,20 @@ btCollisionShapeWrapper *btCollisionShape_create_sphere(float radius)
     return wrapper;
 }
 
+btCollisionShapeWrapper *btCollisionShape_create_box(vec3 *halfExtents)
+{
+    btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
+    wrapper->shape = new btBoxShape(vec3_to_btVector3(halfExtents));
+    return wrapper;
+}
+
+btCollisionShapeWrapper *btCollisionShape_create_cylinder(vec3 *halfExtents)
+{
+    btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
+    wrapper->shape = new btCylinderShape(vec3_to_btVector3(halfExtents));
+    return wrapper;
+}
+
 btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant)
 {
     btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;

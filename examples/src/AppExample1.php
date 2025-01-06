@@ -2,10 +2,15 @@
 
 namespace App;
 
+use Bullet\BoxShape;
+use Bullet\CylinderShape;
 use Bullet\RigidBody;
 use Bullet\SphereShape;
+use Bullet\StaticPlaneShape;
 use Bullet\World;
 use Error;
+use GL\Math\GLM;
+use GL\Math\Quat;
 use GL\Math\Vec2;
 use GL\Math\Vec3;
 use GL\VectorGraphics\{VGAlign, VGColor, VGContext};
@@ -75,6 +80,7 @@ class AppExample1 extends QuickstartApp
         $this->cameraSystem->register($this->entities);
 
         // register components
+        $this->entities->registerComponent(Transform::class);
         $this->entities->registerComponent(RigidBody::class);
         $this->entities->registerComponent(Camera::class);
 
@@ -85,7 +91,7 @@ class AppExample1 extends QuickstartApp
         // load the space kit models
         // these are smaller then our unit space of 1 unit = 1 meter
         // so we scale them up by a factor of 4.0 to ~ match our environment scale
-        $objectLoader->loadAllInDirectory(VISU_PATH_RESOURCES . '/models/spacekit', $objectCollection, 4.0);
+        // $objectLoader->loadAllInDirectory(VISU_PATH_RESOURCES . '/models/spacekit', $objectCollection, 4.0);
         $objectLoader->loadAllInDirectory(VISU_PATH_RESOURCES . '/models/primitives', $objectCollection, 1.0);
 
         // You can bind actions to keys in VISU 
@@ -121,9 +127,37 @@ class AppExample1 extends QuickstartApp
         $this->physicsWorld = new World();
         $this->physicsWorld->setGravity(new Vec3(0, -9.81, 0));
 
-        $shpereShape = new SphereShape(1);
+        // create a ground plane
+        $ground = $this->entities->create();
+        $worldUp = new Vec3(0, 1, 0);
+        $groundRigidBody = new RigidBody(new StaticPlaneShape($worldUp, 0), 0);
+        $model = $this->entities->attach($ground, new DynamicRenderableModel());
+        $model->modelIdentifier = 'cube.obj';
+        $transform = $this->entities->attach($ground, new Transform());
+        $transform->scale = new Vec3(10000, 0.1, 10000);
+        $transform->position = new Vec3(0, 0, 0);
+        $this->physicsWorld->addRigidBody($groundRigidBody);
+        $this->entities->attach($ground, $groundRigidBody);
 
-        for ($i = 0; $i < 500; $i++) 
+        // make a ramp for the ball to roll down
+        // rotate world up vector by 45 degrees
+        // $ramp = $this->entities->create();
+        // $rot = new Quat();
+        // $rot->rotate(GLM::radians(45), new Vec3(0, 0, 1));
+        // $rampNormal = $rot * $worldUp;
+        // $rampRigidBody = new RigidBody(new StaticPlaneShape($rampNormal, 0), 0);
+        // $this->physicsWorld->addRigidBody($rampRigidBody);
+        // $this->entities->attach($ramp, $rampRigidBody);
+        // $model = $this->entities->attach($ramp, new DynamicRenderableModel());
+        // $model->modelIdentifier = 'cube.obj';
+        // $transform = $this->entities->attach($ramp, new Transform());
+        // $transform->scale = new Vec3(10000, 0.1, 10000);
+        // $transform->position = new Vec3(0, 0, 0);
+        // $transform->orientation = $transform->orientation * $rot;
+        // $transform->markDirty();
+
+        $shpereShape = new SphereShape(1);
+        for ($i = 0; $i < 200; $i++) 
         {
             $entity = $this->entities->create();
             $rigidbody = new RigidBody($shpereShape, 5);
@@ -139,6 +173,43 @@ class AppExample1 extends QuickstartApp
             $this->physicsWorld->addRigidBody($rigidbody);
             $this->entities->attach($entity, $rigidbody);
         }
+
+        // cerate some random boxes as well
+        // $boxShape = new BoxShape(new Vec3(1, 1, 1));
+        // for ($i = 0; $i < 100; $i++) 
+        // {
+        //     $entity = $this->entities->create();
+        //     $rigidbody = new RigidBody($boxShape, 5);
+        //     $rigidbody->setPosition(new Vec3(mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100)));
+
+        //     $model = $this->entities->attach($entity, new DynamicRenderableModel());
+        //     $model->modelIdentifier = 'cube.obj';
+
+        //     $transform = $this->entities->attach($entity, new Transform());
+        //     $transform->position = $rigidbody->getPosition();
+
+        //     $this->physicsWorld->addRigidBody($rigidbody);
+        //     $this->entities->attach($entity, $rigidbody);
+        // }
+
+        // create random cylinders
+        $cylinderShape = new CylinderShape(new Vec3(1, 1, 1));
+        for ($i = 0; $i < 100; $i++) 
+        {
+            $entity = $this->entities->create();
+            $rigidbody = new RigidBody($cylinderShape, 5);
+            $rigidbody->setPosition(new Vec3(mt_rand(0, 100), mt_rand(0, 100), mt_rand(0, 100)));
+
+            $model = $this->entities->attach($entity, new DynamicRenderableModel());
+            $model->modelIdentifier = 'cylinder.obj';
+
+            $transform = $this->entities->attach($entity, new Transform());
+            $transform->position = $rigidbody->getPosition();
+
+            $this->physicsWorld->addRigidBody($rigidbody);
+            $this->entities->attach($entity, $rigidbody);
+        }
+        
     }
     
     /**
@@ -169,9 +240,7 @@ class AppExample1 extends QuickstartApp
     public function draw(RenderContext $context, RenderTarget $renderTarget) : void
     {
         // update the position of the entities
-        foreach ($this->entities->view(RigidBody::class) as $entity => $rigidbody) {
-            $transform = $this->entities->get($entity, Transform::class);
-
+        foreach ($this->entities->viewWith(RigidBody::class, Transform::class) as $entity => [$rigidbody, $transform]) {
             $position = $rigidbody->getPosition();
             $position = $position + ($rigidbody->getLinearVelocity() * 1 / 60) * $context->compensation;
 
@@ -194,13 +263,6 @@ class AppExample1 extends QuickstartApp
 
         $this->cameraSystem->update($this->entities);
 
-        // randomly delete a rigidbody
-        if (mt_rand(0, 100) < 5) {
-            if ($entity = $this->entities->firstWith(RigidBody::class)) {
-                $this->entities->destroy($entity);
-            }
-        }
-
         // handle key presses
         // if ($this->inputContext->actions->didButtonPress('bounce')) {
         //     $this->ballVelocity->y = -3.0;
@@ -218,7 +280,7 @@ class AppExample1 extends QuickstartApp
         $this->physicsWorld->stepSimulation(1 / 60);
 
         // update the position of the entities
-        foreach ($this->entities->view(RigidBody::class) as $entity => $rigidbody) {
+        foreach ($this->entities->viewWith(RigidBody::class, Transform::class) as $entity => [$rigidbody, $transform]) {
             $transform = $this->entities->get($entity, Transform::class);
             $transform->setPosition($rigidbody->getPosition());
             $transform->setOrientation($rigidbody->getOrientation());

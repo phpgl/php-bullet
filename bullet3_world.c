@@ -108,6 +108,8 @@ static zend_object_handlers phpbullet3_rigidbody_object_handlers;
 
 // shapes
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_sphere);
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_box);
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_cylinder);
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_static_plane);
 
 /**
@@ -229,6 +231,38 @@ PHP_METHOD(Bullet_SphereShape, __construct)
     }
 
     intern->bt_shape = btCollisionShape_create_sphere(radius);
+}
+
+/**
+ * Bullet\BoxShape::__construct
+ */
+PHP_METHOD(Bullet_BoxShape, __construct)
+{
+    zval *halfExtents;
+    phpbullet3_shape_box_object *intern = phpbullet3_shape_box_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &halfExtents, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(halfExtents));
+    intern->bt_shape = btCollisionShape_create_box(&vec3_ptr->data);
+}
+
+/**
+ * Bullet\CylinderShape::__construct
+ */
+PHP_METHOD(Bullet_CylinderShape, __construct)
+{
+    zval *halfExtents;
+    phpbullet3_shape_cylinder_object *intern = phpbullet3_shape_cylinder_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &halfExtents, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(halfExtents));
+    intern->bt_shape = btCollisionShape_create_cylinder(&vec3_ptr->data);
 }
 
 /**
@@ -429,5 +463,7 @@ void phpbullet3_register_world_module(INIT_FUNC_ARGS)
 
     // collision shape
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_SphereShape, shape_sphere);
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_BoxShape, shape_box);
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_CylinderShape, shape_cylinder);
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_StaticPlaneShape, shape_static_plane);
 }
