@@ -51,6 +51,7 @@ static zend_object_handlers phpbullet3_constraint_wrapper_object_handlers;
 
 // BEGIN constraint class impelementations
 PHPBULLET_DEFINE_CONSTRAINT_IMPL(point2point)
+PHPBULLET_DEFINE_CONSTRAINT_IMPL(hinge)
 // END constraint class impelementations
 
 zend_object *phpbullet3_constraint_wrapper_create_object(zend_class_entry *class_type)
@@ -120,6 +121,48 @@ PHP_METHOD(Bullet_Point2PointConstraint, __construct)
 }
 
 /**
+ * Bullet\HingeConstraint::__construct
+ */
+PHP_METHOD(Bullet_HingeConstraint, __construct)
+{
+    zval *bodyA_zv, *bodyB_zv;
+    zval *pivotA_zv, *pivotB_zv;
+    zval *axisA_zv, *axisB_zv;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "OOOOOO",
+            &bodyA_zv, phpbullet3_get_rigidbody_ce(),
+            &bodyB_zv, phpbullet3_get_rigidbody_ce(),
+            &pivotA_zv, phpglfw_get_math_vec3_ce(),
+            &pivotB_zv, phpglfw_get_math_vec3_ce(),
+            &axisA_zv, phpglfw_get_math_vec3_ce(),
+            &axisB_zv, phpglfw_get_math_vec3_ce()) == FAILURE)
+    {
+        return;
+    }
+
+    phpbullet3_rigidbody_object *rbA = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(bodyA_zv));
+    phpbullet3_rigidbody_object *rbB = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(bodyB_zv));
+
+    phpglfw_math_vec3_object *pivotA_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(pivotA_zv));
+    phpglfw_math_vec3_object *pivotB_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(pivotB_zv));
+    phpglfw_math_vec3_object *axisA_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(axisA_zv));
+    phpglfw_math_vec3_object *axisB_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(axisB_zv));
+
+    phpbullet3_constraint_wrapper_object *intern = phpbullet3_constraint_from_zobj_p(Z_OBJ_P(getThis()));
+
+    // Create the actual Bullet constraint
+    intern->bt_constraint = btHingeConstraint_create(
+        rbA->bt_rigidbody,
+        rbB->bt_rigidbody,
+        &pivotA_ptr->data,
+        &pivotB_ptr->data,
+        &axisA_ptr->data,
+        &axisB_ptr->data
+    );
+}
+
+
+/**
  * Register the “Constraint” module
  */
 void phpbullet3_register_constraint_module(INIT_FUNC_ARGS)
@@ -133,4 +176,5 @@ void phpbullet3_register_constraint_module(INIT_FUNC_ARGS)
     
     // contraints
     PHPBULLET_DEFINE_CONSTRAINT_REGISTER(Bullet_Point2PointConstraint, point2point);
+    PHPBULLET_DEFINE_CONSTRAINT_REGISTER(Bullet_HingeConstraint, hinge);
 }

@@ -39,6 +39,16 @@ class CylinderShape implements CollisionShape
     public function __construct(\GL\Math\Vec3 $halfExtents) {}
 }
 
+class CylinderShapeX implements CylinderShape
+{
+    public function __construct(\GL\Math\Vec3 $halfExtents) {}
+}
+
+class CylinderShapeZ implements CylinderShape
+{
+    public function __construct(\GL\Math\Vec3 $halfExtents) {}
+}
+
 class StaticPlaneShape implements CollisionShape
 {
     public function __construct(\GL\Math\Vec3 $normal, float $constant = 0.0) {}
@@ -57,6 +67,19 @@ class Point2PointConstraint implements Constraint
         \GL\Math\Vec3 $pivotInB
     ) {}
 }
+
+class HingeConstraint implements Constraint
+{
+    public function __construct(
+        RigidBody $bodyA,
+        RigidBody $bodyB,
+        \GL\Math\Vec3 $pivotInA,
+        \GL\Math\Vec3 $pivotInB,
+        \GL\Math\Vec3 $axisInA,
+        \GL\Math\Vec3 $axisInB
+    ) {}
+}
+
 class RigidBody
 {
     public CollisionShape $collisionShape;

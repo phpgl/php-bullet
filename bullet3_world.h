@@ -59,6 +59,8 @@ phpbullet3_rigidbody_object *phpbullet3_rigidbody_from_zobj_p(zend_object *obj);
 PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_sphere);
 PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_box);
 PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_cylinder);
+PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_cylinderX);
+PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_cylinderZ);
 PHPBULLET_DEFINE_COLLISION_SHAPE_METHODS(shape_static_plane);
 
 void phpbullet3_register_world_module(INIT_FUNC_ARGS);

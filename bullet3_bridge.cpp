@@ -162,6 +162,20 @@ btCollisionShapeWrapper *btCollisionShape_create_cylinder(vec3 *halfExtents)
     return wrapper;
 }
 
+btCollisionShapeWrapper *btCollisionShape_create_cylinderX(vec3 *halfExtents)
+{
+    btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
+    wrapper->shape = new btCylinderShapeX(vec3_to_btVector3(halfExtents));
+    return wrapper;
+}
+
+btCollisionShapeWrapper *btCollisionShape_create_cylinderZ(vec3 *halfExtents)
+{
+    btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
+    wrapper->shape = new btCylinderShapeZ(vec3_to_btVector3(halfExtents));
+    return wrapper;
+}
+
 btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant)
 {
     btCollisionShapeWrapper *wrapper = new btCollisionShapeWrapper;
@@ -185,6 +199,13 @@ btTypedConstraintWrapper *btPoint2PointConstraint_create(btRigidBodyWrapper *bod
 {
     btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
     wrapper->constraint = new btPoint2PointConstraint(*bodyA->rigidBody, *bodyB->rigidBody, vec3_to_btVector3(pivotA), vec3_to_btVector3(pivotB));
+    return wrapper;
+}
+
+btTypedConstraintWrapper *btHingeConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, vec3 *pivotA, vec3 *pivotB, vec3 *axisA, vec3 *axisB)
+{
+    btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
+    wrapper->constraint = new btHingeConstraint(*bodyA->rigidBody, *bodyB->rigidBody, vec3_to_btVector3(pivotA), vec3_to_btVector3(pivotB), vec3_to_btVector3(axisA), vec3_to_btVector3(axisB));
     return wrapper;
 }
 

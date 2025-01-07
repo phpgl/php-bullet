@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: d67e12edda5eeacaaf17452d2542292770afe233 */
+ * Stub hash: 688cad90715e2e23ab5ff89be64e8da876061fb7 */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_Bullet_bullet3_test, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
@@ -40,6 +40,10 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_Bullet_CylinderShape___construct arginfo_class_Bullet_BoxShape___construct
 
+#define arginfo_class_Bullet_CylinderShapeX___construct arginfo_class_Bullet_BoxShape___construct
+
+#define arginfo_class_Bullet_CylinderShapeZ___construct arginfo_class_Bullet_BoxShape___construct
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_StaticPlaneShape___construct, 0, 0, 1)
 	ZEND_ARG_OBJ_INFO(0, normal, GL\\Math\\Vec3, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, constant, IS_DOUBLE, 0, "0.0")
@@ -50,6 +54,15 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_Point2PointConstraint___construct, 0
 	ZEND_ARG_OBJ_INFO(0, bodyB, Bullet\\RigidBody, 0)
 	ZEND_ARG_OBJ_INFO(0, pivotInA, GL\\Math\\Vec3, 0)
 	ZEND_ARG_OBJ_INFO(0, pivotInB, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_HingeConstraint___construct, 0, 0, 6)
+	ZEND_ARG_OBJ_INFO(0, bodyA, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, bodyB, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, pivotInA, GL\\Math\\Vec3, 0)
+	ZEND_ARG_OBJ_INFO(0, pivotInB, GL\\Math\\Vec3, 0)
+	ZEND_ARG_OBJ_INFO(0, axisInA, GL\\Math\\Vec3, 0)
+	ZEND_ARG_OBJ_INFO(0, axisInB, GL\\Math\\Vec3, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_RigidBody___construct, 0, 0, 1)
@@ -118,8 +131,11 @@ ZEND_METHOD(Bullet_World, stepSimulation);
 ZEND_METHOD(Bullet_SphereShape, __construct);
 ZEND_METHOD(Bullet_BoxShape, __construct);
 ZEND_METHOD(Bullet_CylinderShape, __construct);
+ZEND_METHOD(Bullet_CylinderShapeX, __construct);
+ZEND_METHOD(Bullet_CylinderShapeZ, __construct);
 ZEND_METHOD(Bullet_StaticPlaneShape, __construct);
 ZEND_METHOD(Bullet_Point2PointConstraint, __construct);
+ZEND_METHOD(Bullet_HingeConstraint, __construct);
 ZEND_METHOD(Bullet_RigidBody, __construct);
 ZEND_METHOD(Bullet_RigidBody, setPosition);
 ZEND_METHOD(Bullet_RigidBody, getPosition);
@@ -178,6 +194,18 @@ static const zend_function_entry class_Bullet_CylinderShape_methods[] = {
 };
 
 
+static const zend_function_entry class_Bullet_CylinderShapeX_methods[] = {
+	ZEND_ME(Bullet_CylinderShapeX, __construct, arginfo_class_Bullet_CylinderShapeX___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_CylinderShapeZ_methods[] = {
+	ZEND_ME(Bullet_CylinderShapeZ, __construct, arginfo_class_Bullet_CylinderShapeZ___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
 static const zend_function_entry class_Bullet_StaticPlaneShape_methods[] = {
 	ZEND_ME(Bullet_StaticPlaneShape, __construct, arginfo_class_Bullet_StaticPlaneShape___construct, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
@@ -191,6 +219,12 @@ static const zend_function_entry class_Bullet_Constraint_methods[] = {
 
 static const zend_function_entry class_Bullet_Point2PointConstraint_methods[] = {
 	ZEND_ME(Bullet_Point2PointConstraint, __construct, arginfo_class_Bullet_Point2PointConstraint___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_HingeConstraint_methods[] = {
+	ZEND_ME(Bullet_HingeConstraint, __construct, arginfo_class_Bullet_HingeConstraint___construct, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -268,6 +302,28 @@ static zend_class_entry *register_class_Bullet_CylinderShape(zend_class_entry *c
 	return class_entry;
 }
 
+static zend_class_entry *register_class_Bullet_CylinderShapeX(zend_class_entry *class_entry_Bullet_CylinderShape)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "CylinderShapeX", class_Bullet_CylinderShapeX_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_CylinderShape);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_CylinderShapeZ(zend_class_entry *class_entry_Bullet_CylinderShape)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "CylinderShapeZ", class_Bullet_CylinderShapeZ_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_CylinderShape);
+
+	return class_entry;
+}
+
 static zend_class_entry *register_class_Bullet_StaticPlaneShape(zend_class_entry *class_entry_Bullet_CollisionShape)
 {
 	zend_class_entry ce, *class_entry;
@@ -294,6 +350,17 @@ static zend_class_entry *register_class_Bullet_Point2PointConstraint(zend_class_
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Bullet", "Point2PointConstraint", class_Bullet_Point2PointConstraint_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_HingeConstraint(zend_class_entry *class_entry_Bullet_Constraint)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "HingeConstraint", class_Bullet_HingeConstraint_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
 	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
 

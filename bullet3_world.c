@@ -111,6 +111,8 @@ static zend_object_handlers phpbullet3_rigidbody_object_handlers;
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_sphere);
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_box);
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_cylinder);
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_cylinderX);
+PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_cylinderZ);
 PHPBULLET_DEFINE_COLLISION_SHAPE_IMPL(shape_static_plane);
 
 /**
@@ -308,6 +310,38 @@ PHP_METHOD(Bullet_CylinderShape, __construct)
 
     phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(halfExtents));
     intern->bt_shape = btCollisionShape_create_cylinder(&vec3_ptr->data);
+}
+
+/**
+ * Bullet\CylinderShapeX::__construct
+ */
+PHP_METHOD(Bullet_CylinderShapeX, __construct)
+{
+    zval *halfExtents;
+    phpbullet3_shape_cylinderX_object *intern = phpbullet3_shape_cylinderX_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &halfExtents, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(halfExtents));
+    intern->bt_shape = btCollisionShape_create_cylinderX(&vec3_ptr->data);
+}
+
+/**
+ * Bullet\CylinderShapeZ::__construct
+ */
+PHP_METHOD(Bullet_CylinderShapeZ, __construct)
+{
+    zval *halfExtents;
+    phpbullet3_shape_cylinderZ_object *intern = phpbullet3_shape_cylinderZ_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &halfExtents, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(halfExtents));
+    intern->bt_shape = btCollisionShape_create_cylinderZ(&vec3_ptr->data);
 }
 
 /**
@@ -643,5 +677,7 @@ void phpbullet3_register_world_module(INIT_FUNC_ARGS)
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_SphereShape, shape_sphere);
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_BoxShape, shape_box);
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_CylinderShape, shape_cylinder);
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_CylinderShapeX, shape_cylinderX);
+    PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_CylinderShapeZ, shape_cylinderZ);
     PHPBULLET_DEFINE_COLLISION_SHAPE_REGISTER(Bullet_StaticPlaneShape, shape_static_plane);
 }

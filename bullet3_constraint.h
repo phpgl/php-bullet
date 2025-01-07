@@ -41,6 +41,7 @@ zend_class_entry *phpbullet3_get_constraint_ce();
 
 // BEGIN constraint class entries
 PHPBULLET_DEFINE_CONSTRAINT_DECL(point2point)
+PHPBULLET_DEFINE_CONSTRAINT_DECL(hinge)
 // END constraint class entries
 
 phpbullet3_constraint_wrapper_object *phpbullet3_constraint_from_zobj_p(zend_object *obj);

@@ -30,9 +30,6 @@ void btDynamicsWorld_removeConstraint(btDynamicsWorldWrapper *world, btTypedCons
 
 void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *world, float timeStep);
 
-
-
-
 /**
  * Collision shape
  * 
@@ -48,6 +45,8 @@ btCollisionShapeWrapper *btCollisionShape_create_box(vec3 *halfExtents);
 
 // cylinder
 btCollisionShapeWrapper *btCollisionShape_create_cylinder(vec3 *halfExtents);
+btCollisionShapeWrapper *btCollisionShape_create_cylinderX(vec3 *halfExtents);
+btCollisionShapeWrapper *btCollisionShape_create_cylinderZ(vec3 *halfExtents);
 
 // static plane
 btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, float constant);
@@ -61,6 +60,9 @@ void btTypedConstraint_destroy(btTypedConstraintWrapper *constraint);
 
 // point to point
 btTypedConstraintWrapper *btPoint2PointConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, vec3 *pivotA, vec3 *pivotB);
+
+// hinge
+btTypedConstraintWrapper *btHingeConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, vec3 *pivotA, vec3 *pivotB, vec3 *axisA, vec3 *axisB);
 
 /**
  * Rigid body
