@@ -24,6 +24,7 @@
  * SOFTWARE.
  */
 #include "bullet3_world.h"
+#include "bullet3_constraint.h"
 #include "bullet3_arginfo.h"
 #include "glfw/phpglfw_math.h"
 
@@ -190,6 +191,50 @@ PHP_METHOD(Bullet_World, addRigidBody)
     phpbullet3_rigidbody_object *rigidbody_ptr = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(rigidbody));
 
     btDynamicsWorld_addRigidBody(intern->bt_world, rigidbody_ptr->bt_rigidbody);
+}
+
+/**
+ * Bullet\World::addConstraint
+ */
+PHP_METHOD(Bullet_World, addConstraint)
+{
+    zval *constraint_zv;
+    zend_bool disableCollisions = 0;
+
+    phpbullet3_world_object *intern = phpbullet3_world_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "O|b", &constraint_zv, phpbullet3_get_constraint_ce(), &disableCollisions) == FAILURE) {
+        return;
+    }
+
+    phpbullet3_constraint_wrapper_object *constraint_obj = phpbullet3_constraint_from_zobj_p(Z_OBJ_P(constraint_zv));
+
+    btDynamicsWorld_addConstraint(
+        intern->bt_world,
+        constraint_obj->bt_constraint,
+        (bool) disableCollisions
+    );
+}
+
+/**
+ * Bullet\World::removeConstraint
+ */
+PHP_METHOD(Bullet_World, removeConstraint)
+{
+    zval *constraint_zv;
+
+    phpbullet3_world_object *intern = phpbullet3_world_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS(), "O", &constraint_zv, phpbullet3_get_constraint_ce()) == FAILURE) {
+        return;
+    }
+
+    phpbullet3_constraint_wrapper_object *constraint_obj = phpbullet3_constraint_from_zobj_p(Z_OBJ_P(constraint_zv));
+
+    btDynamicsWorld_removeConstraint(
+        intern->bt_world,
+        constraint_obj->bt_constraint
+    );
 }
 
 /**
@@ -433,6 +478,139 @@ PHP_METHOD(Bullet_RigidBody, getOrientation)
 
     // read the position from the rigidbody
     btRigidBody_getQuaternion(intern->bt_rigidbody, &quat_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::setOrientation
+ */
+PHP_METHOD(Bullet_RigidBody, setOrientation)
+{
+    zval *quat;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &quat, phpglfw_get_math_quat_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_quat_object *quat_ptr = phpglfw_math_quat_objectptr_from_zobj_p(Z_OBJ_P(quat));
+
+    btRigidBody_setQuaternion(intern->bt_rigidbody, &quat_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyForce
+ */
+PHP_METHOD(Bullet_RigidBody, applyForce)
+{
+    zval *force, *rel_pos;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "OO", &force, phpglfw_get_math_vec3_ce(), &rel_pos, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *force_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(force));
+    phpglfw_math_vec3_object *rel_pos_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(rel_pos));
+
+    btRigidBody_applyForce(intern->bt_rigidbody, &force_ptr->data, &rel_pos_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyCentralForce
+ */
+PHP_METHOD(Bullet_RigidBody, applyCentralForce)
+{
+    zval *force;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &force, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(force));
+
+    btRigidBody_applyCentralForce(intern->bt_rigidbody, &vec3_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyTorque
+ */
+PHP_METHOD(Bullet_RigidBody, applyTorque)
+{
+    zval *torque;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &torque, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(torque));
+
+    btRigidBody_applyTorque(intern->bt_rigidbody, &vec3_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyImpulse
+ */
+PHP_METHOD(Bullet_RigidBody, applyImpulse)
+{
+    zval *impulse, *rel_pos;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "OO", &impulse, phpglfw_get_math_vec3_ce(), &rel_pos, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *impulse_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(impulse));
+    phpglfw_math_vec3_object *rel_pos_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(rel_pos));
+
+    btRigidBody_applyImpulse(intern->bt_rigidbody, &impulse_ptr->data, &rel_pos_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyCentralImpulse
+ */
+PHP_METHOD(Bullet_RigidBody, applyCentralImpulse)
+{
+    zval *impulse;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &impulse, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(impulse));
+
+    btRigidBody_applyCentralImpulse(intern->bt_rigidbody, &vec3_ptr->data);
+}
+
+/**
+ * Bullet\RigidBody::applyTorqueImpulse
+ */
+PHP_METHOD(Bullet_RigidBody, applyTorqueImpulse)
+{
+    zval *torque;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &torque, phpglfw_get_math_vec3_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_vec3_object *vec3_ptr = phpglfw_math_vec3_objectptr_from_zobj_p(Z_OBJ_P(torque));
+
+    btRigidBody_applyTorqueImpulse(intern->bt_rigidbody, &vec3_ptr->data);
+}
+
+
+
+/**
+ * Bullet\RigidBody::activate
+ */
+PHP_METHOD(Bullet_RigidBody, activate)
+{
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    btRigidBody_activate(intern->bt_rigidbody);
 }
 
 /**

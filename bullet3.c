@@ -10,6 +10,7 @@
 #include "bullet3_arginfo.h"
 #include "bullet3_bridge.h"
 #include "bullet3_world.h" 
+#include "bullet3_constraint.h"
  
 
 /* For compatibility with older PHP versions */
@@ -23,6 +24,7 @@ PHP_MINIT_FUNCTION(bullet3)
 {
     // world module
     phpbullet3_register_world_module(INIT_FUNC_ARGS_PASSTHRU);
+    phpbullet3_register_constraint_module(INIT_FUNC_ARGS_PASSTHRU);
 
     return SUCCESS;
 }

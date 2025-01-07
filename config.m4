@@ -31,6 +31,7 @@ if test "$PHP_BULLET3" != "no"; then
     #   if ! (cd "$BULLET3_BUILD_DIR" && cmake "$BULLET3_SUBDIR" -DCMAKE_INSTALL_PREFIX="$BULLET3_BUILD_DIR" -DBUILD_UNIT_TESTS=OFF -DBUILD_BULLET3=ON -DBUILD_EXTRAS=OFF -DBUILD_CPU_DEMOS=OFF -DBUILD_OPENGL3_DEMOS=OFF -DBUILD_SHARED_LIBS=OFF); then
       if ! (cd "$BULLET3_BUILD_DIR" && cmake "$BULLET3_SUBDIR" \
         -DCMAKE_INSTALL_PREFIX="$BULLET3_BUILD_DIR" \
+        -DCMAKE_OSX_SYSROOT=$(xcrun --sdk macosx --show-sdk-path) \
         -DBUILD_UNIT_TESTS=OFF \
         -DBUILD_BULLET3=ON \
         -DBUILD_EXTRAS=OFF \
@@ -60,6 +61,7 @@ if test "$PHP_BULLET3" != "no"; then
   PHP_ADD_LIBRARY_WITH_PATH([BulletDynamics], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])
   PHP_ADD_LIBRARY_WITH_PATH([BulletCollision], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])
   PHP_ADD_LIBRARY_WITH_PATH([LinearMath], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])
+  
   PHP_SUBST(BULLET3_SHARED_LIBADD)
 
   # dnl Include the Bullet3 headers and libraries
@@ -67,6 +69,7 @@ if test "$PHP_BULLET3" != "no"; then
   # PHP_EVAL_LIBLINE([$BULLET3_LIBS], BULLET3_SHARED_LIBADD)
   # PHP_SUBST(BULLET3_SHARED_LIBADD)
   PHP_ADD_INCLUDE([$BULLET3_SUBDIR/src])
+
   # dump include path
   AC_MSG_NOTICE([Bullet3 include path: $BULLET3_SUBDIR/src])
   AC_MSG_NOTICE([BULLET3_SHARED_LIBADD: $BULLET3_SHARED_LIBADD])
@@ -79,5 +82,5 @@ if test "$PHP_BULLET3" != "no"; then
   PHP_REQUIRE_CXX()
 
   dnl register the extension
-  PHP_NEW_EXTENSION([bullet3], [bullet3.c bullet3_world.c bullet3_bridge.cpp], [$ext_shared], , , [$BULLET3_SHARED_LIBADD])
+  PHP_NEW_EXTENSION([bullet3], [bullet3.c bullet3_world.c bullet3_constraint.c bullet3_bridge.cpp], [$ext_shared], , , [$BULLET3_SHARED_LIBADD])
 fi

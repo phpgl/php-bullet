@@ -20,6 +20,10 @@ struct btCollisionShapeWrapper {
     btCollisionShape* shape;
 };
 
+struct btTypedConstraintWrapper {
+    btTypedConstraint* constraint;
+};
+
 /**
  * Common Helpers
  * 
@@ -28,6 +32,11 @@ struct btCollisionShapeWrapper {
 btVector3 vec3_to_btVector3(vec3 *v)
 {
     return btVector3((*v)[0], (*v)[1], (*v)[2]);
+}
+
+btQuaternion quat_to_btQuaternion(quat *q)
+{
+    return btQuaternion((*q)[1], (*q)[2], (*q)[3], (*q)[0]);
 }
 
 void btVector3_to_vec3(btVector3 *v, vec3 *out)
@@ -103,6 +112,23 @@ void btDynamicsWorld_getGravity(btDynamicsWorldWrapper *world, vec3 *gravity) {
     btVector3_to_vec3(&btGravity, gravity);
 }
 
+void btDynamicsWorld_addRigidBody(btDynamicsWorldWrapper *worldWrapper, btRigidBodyWrapper *bodyWrapper) {
+    worldWrapper->dynamicsWorld->addRigidBody(bodyWrapper->rigidBody);
+    bodyWrapper->assignedWorld = worldWrapper->dynamicsWorld;
+}
+
+void btDynamicsWorld_addConstraint(btDynamicsWorldWrapper *worldWrapper, btTypedConstraintWrapper *constraint, bool noclip) {
+    worldWrapper->dynamicsWorld->addConstraint(constraint->constraint, noclip);
+}
+
+void btDynamicsWorld_removeConstraint(btDynamicsWorldWrapper *worldWrapper, btTypedConstraintWrapper *constraint) {
+    worldWrapper->dynamicsWorld->removeConstraint(constraint->constraint);
+}
+
+void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *worldWrapper, float timeStep) {
+    worldWrapper->dynamicsWorld->stepSimulation(timeStep);
+}
+
 /**
  * Collision shape
  * 
@@ -144,6 +170,25 @@ btCollisionShapeWrapper *btCollisionShape_create_static_plane(vec3 *normal, floa
 }
 
 /**
+ * Contraints
+ * 
+ * ----------------------------------------------------------------------------
+ */
+
+void btTypedConstraint_destroy(btTypedConstraintWrapper *constraint)
+{
+    delete constraint->constraint;
+    delete constraint;
+}
+
+btTypedConstraintWrapper *btPoint2PointConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, vec3 *pivotA, vec3 *pivotB)
+{
+    btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
+    wrapper->constraint = new btPoint2PointConstraint(*bodyA->rigidBody, *bodyB->rigidBody, vec3_to_btVector3(pivotA), vec3_to_btVector3(pivotB));
+    return wrapper;
+}
+
+/**
  * Rigid body
  * 
  * ----------------------------------------------------------------------------
@@ -177,11 +222,13 @@ void btRigidBody_destroy(btRigidBodyWrapper *wrapper) {
     delete wrapper;
 }
 
-void btRigidBody_setPosition(btRigidBodyWrapper *body, vec3 *position)
-{
+void btRigidBody_setPosition(btRigidBodyWrapper *body, vec3 *position) {
     body->rigidBody->getWorldTransform().setOrigin(vec3_to_btVector3(position));
 }
 
+void btRigidBody_setQuaternion(btRigidBodyWrapper *body, quat *orientation) {
+    body->rigidBody->getWorldTransform().setRotation(quat_to_btQuaternion(orientation));
+}
 
 void btRigidBody_setMass(btRigidBodyWrapper *body, float mass)
 {
@@ -191,15 +238,6 @@ void btRigidBody_setMass(btRigidBodyWrapper *body, float mass)
     body->rigidBody->setMassProps(mass, localInertia);
 }
 
-
-void btDynamicsWorld_addRigidBody(btDynamicsWorldWrapper *worldWrapper, btRigidBodyWrapper *bodyWrapper) {
-    worldWrapper->dynamicsWorld->addRigidBody(bodyWrapper->rigidBody);
-    bodyWrapper->assignedWorld = worldWrapper->dynamicsWorld;
-}
-
-void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *worldWrapper, float timeStep) {
-    worldWrapper->dynamicsWorld->stepSimulation(timeStep);
-}
 
 void btRigidBody_getPosition(btRigidBodyWrapper *bodyWrapper, vec3 *position) {
     btVector3 btPosition = bodyWrapper->rigidBody->getWorldTransform().getOrigin();
@@ -224,4 +262,31 @@ void btRigidBody_getQuaternion(btRigidBodyWrapper *bodyWrapper, quat* quaternion
 void btRigidBody_getOpenGLMatrix(btRigidBodyWrapper *bodyWrapper, mat4x4* matrix) {
     bodyWrapper->rigidBody->getWorldTransform().getOpenGLMatrix(matrix[0][0]);
 }
-    
+
+void btRigidBody_applyForce(btRigidBodyWrapper *body, vec3 *force, vec3 *rel_pos) {
+    body->rigidBody->applyForce(vec3_to_btVector3(force), vec3_to_btVector3(rel_pos));
+}
+
+void btRigidBody_applyCentralForce(btRigidBodyWrapper *body, vec3 *force) {
+    body->rigidBody->applyCentralForce(vec3_to_btVector3(force));
+}
+
+void btRigidBody_applyTorque(btRigidBodyWrapper *body, vec3 *torque) {
+    body->rigidBody->applyTorque(vec3_to_btVector3(torque));
+}
+
+void btRigidBody_applyImpulse(btRigidBodyWrapper *body, vec3 *impulse, vec3 *rel_pos) {
+    body->rigidBody->applyImpulse(vec3_to_btVector3(impulse), vec3_to_btVector3(rel_pos));
+}
+
+void btRigidBody_applyCentralImpulse(btRigidBodyWrapper *body, vec3 *impulse) {
+    body->rigidBody->applyCentralImpulse(vec3_to_btVector3(impulse));
+}
+
+void btRigidBody_applyTorqueImpulse(btRigidBodyWrapper *body, vec3 *torque) {
+    body->rigidBody->applyTorqueImpulse(vec3_to_btVector3(torque));
+}
+
+void btRigidBody_activate(btRigidBodyWrapper *body) {
+    body->rigidBody->activate();
+}
