@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 688cad90715e2e23ab5ff89be64e8da876061fb7 */
+ * Stub hash: 1284a5172e9820d014ed2c4c7ec42ada0b87dddc */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_Bullet_bullet3_test, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
@@ -65,6 +65,110 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_HingeConstraint___construct, 0, 0, 6
 	ZEND_ARG_OBJ_INFO(0, axisInB, GL\\Math\\Vec3, 0)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_HingeConstraint_setLimit, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, low, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, high, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, softness, IS_DOUBLE, 0, "0.9")
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, biasFactor, IS_DOUBLE, 0, "0.3")
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, relaxationFactor, IS_DOUBLE, 0, "1.0")
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_SliderConstraint___construct, 0, 0, 4)
+	ZEND_ARG_OBJ_INFO(0, bodyA, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, bodyB, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInA, GL\\Math\\Mat4, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInB, GL\\Math\\Mat4, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, useLinearReferenceFrameA, _IS_BOOL, 0, "true")
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpringConstraint___construct arginfo_class_Bullet_SliderConstraint___construct
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint___construct, 0, 0, 4)
+	ZEND_ARG_OBJ_INFO(0, bodyA, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, bodyB, Bullet\\RigidBody, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInA, GL\\Math\\Mat4, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInB, GL\\Math\\Mat4, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setFrames, 0, 2, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInA, GL\\Math\\Mat4, 0)
+	ZEND_ARG_OBJ_INFO(0, frameInB, GL\\Math\\Mat4, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setLinearLowerLimit, 0, 1, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, linearLower, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setLinearUpperLimit, 0, 1, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, linearUpper, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularLowerLimit, 0, 1, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, angularLower, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularLowerLimitReversed arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularLowerLimit
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularUpperLimit, 0, 1, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, angularUpper, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularUpperLimitReversed arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularUpperLimit
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setLimit, 0, 3, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, axis, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, lo, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, hi, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_setLimitReversed arginfo_class_Bullet_Generic6DofSpring2Constraint_setLimit
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setAxis, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_OBJ_INFO(0, axis, GL\\Math\\Vec3, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setBounce, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, bounce, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_enableMotor, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, onOff, _IS_BOOL, 0)
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_setServo arginfo_class_Bullet_Generic6DofSpring2Constraint_enableMotor
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setTargetVelocity, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, velocity, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setServoTarget, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, target, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setMaxMotorForce, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, force, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_enableSpring arginfo_class_Bullet_Generic6DofSpring2Constraint_enableMotor
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setStiffness, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, stiffness, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, limitIfNeeded, _IS_BOOL, 0, "true")
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2Constraint_setDamping, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, index, IS_LONG, 0)
+	ZEND_ARG_TYPE_INFO(0, damping, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, limitIfNeeded, _IS_BOOL, 0, "true")
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_RigidBody___construct, 0, 0, 1)
 	ZEND_ARG_OBJ_INFO(0, collisionShape, Bullet\\CollisionShape, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, mass, IS_DOUBLE, 0, "0.0")
@@ -89,6 +193,27 @@ ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setMass, 0, 1, IS_VOID, 0)
 	ZEND_ARG_TYPE_INFO(0, mass, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setRestitution, 0, 1, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, restitution, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setFriction, 0, 1, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, friction, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setRollingFriction, 0, 1, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, rollingFriction, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setSpinningFriction, 0, 1, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, spinningFriction, IS_DOUBLE, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_RigidBody_setContactStiffnessAndDamping, 0, 2, IS_VOID, 0)
+	ZEND_ARG_TYPE_INFO(0, stiffness, IS_DOUBLE, 0)
+	ZEND_ARG_TYPE_INFO(0, damping, IS_DOUBLE, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_WITH_RETURN_OBJ_INFO_EX(arginfo_class_Bullet_RigidBody_getTransform, 0, 0, GL\\Math\\Mat4, 0)
@@ -136,6 +261,29 @@ ZEND_METHOD(Bullet_CylinderShapeZ, __construct);
 ZEND_METHOD(Bullet_StaticPlaneShape, __construct);
 ZEND_METHOD(Bullet_Point2PointConstraint, __construct);
 ZEND_METHOD(Bullet_HingeConstraint, __construct);
+ZEND_METHOD(Bullet_HingeConstraint, setLimit);
+ZEND_METHOD(Bullet_SliderConstraint, __construct);
+ZEND_METHOD(Bullet_Generic6DofSpringConstraint, __construct);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, __construct);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setFrames);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setLinearLowerLimit);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setLinearUpperLimit);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setAngularLowerLimit);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setAngularLowerLimitReversed);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setAngularUpperLimit);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setAngularUpperLimitReversed);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setLimit);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setLimitReversed);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setAxis);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setBounce);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, enableMotor);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setServo);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setTargetVelocity);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setServoTarget);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setMaxMotorForce);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, enableSpring);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setStiffness);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setDamping);
 ZEND_METHOD(Bullet_RigidBody, __construct);
 ZEND_METHOD(Bullet_RigidBody, setPosition);
 ZEND_METHOD(Bullet_RigidBody, getPosition);
@@ -144,6 +292,11 @@ ZEND_METHOD(Bullet_RigidBody, getAngularVelocity);
 ZEND_METHOD(Bullet_RigidBody, getOrientation);
 ZEND_METHOD(Bullet_RigidBody, setOrientation);
 ZEND_METHOD(Bullet_RigidBody, setMass);
+ZEND_METHOD(Bullet_RigidBody, setRestitution);
+ZEND_METHOD(Bullet_RigidBody, setFriction);
+ZEND_METHOD(Bullet_RigidBody, setRollingFriction);
+ZEND_METHOD(Bullet_RigidBody, setSpinningFriction);
+ZEND_METHOD(Bullet_RigidBody, setContactStiffnessAndDamping);
 ZEND_METHOD(Bullet_RigidBody, getTransform);
 ZEND_METHOD(Bullet_RigidBody, applyForce);
 ZEND_METHOD(Bullet_RigidBody, applyCentralForce);
@@ -225,6 +378,44 @@ static const zend_function_entry class_Bullet_Point2PointConstraint_methods[] = 
 
 static const zend_function_entry class_Bullet_HingeConstraint_methods[] = {
 	ZEND_ME(Bullet_HingeConstraint, __construct, arginfo_class_Bullet_HingeConstraint___construct, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_HingeConstraint, setLimit, arginfo_class_Bullet_HingeConstraint_setLimit, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_SliderConstraint_methods[] = {
+	ZEND_ME(Bullet_SliderConstraint, __construct, arginfo_class_Bullet_SliderConstraint___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_Generic6DofSpringConstraint_methods[] = {
+	ZEND_ME(Bullet_Generic6DofSpringConstraint, __construct, arginfo_class_Bullet_Generic6DofSpringConstraint___construct, ZEND_ACC_PUBLIC)
+	ZEND_FE_END
+};
+
+
+static const zend_function_entry class_Bullet_Generic6DofSpring2Constraint_methods[] = {
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, __construct, arginfo_class_Bullet_Generic6DofSpring2Constraint___construct, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setFrames, arginfo_class_Bullet_Generic6DofSpring2Constraint_setFrames, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setLinearLowerLimit, arginfo_class_Bullet_Generic6DofSpring2Constraint_setLinearLowerLimit, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setLinearUpperLimit, arginfo_class_Bullet_Generic6DofSpring2Constraint_setLinearUpperLimit, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setAngularLowerLimit, arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularLowerLimit, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setAngularLowerLimitReversed, arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularLowerLimitReversed, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setAngularUpperLimit, arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularUpperLimit, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setAngularUpperLimitReversed, arginfo_class_Bullet_Generic6DofSpring2Constraint_setAngularUpperLimitReversed, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setLimit, arginfo_class_Bullet_Generic6DofSpring2Constraint_setLimit, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setLimitReversed, arginfo_class_Bullet_Generic6DofSpring2Constraint_setLimitReversed, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setAxis, arginfo_class_Bullet_Generic6DofSpring2Constraint_setAxis, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setBounce, arginfo_class_Bullet_Generic6DofSpring2Constraint_setBounce, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, enableMotor, arginfo_class_Bullet_Generic6DofSpring2Constraint_enableMotor, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setServo, arginfo_class_Bullet_Generic6DofSpring2Constraint_setServo, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setTargetVelocity, arginfo_class_Bullet_Generic6DofSpring2Constraint_setTargetVelocity, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setServoTarget, arginfo_class_Bullet_Generic6DofSpring2Constraint_setServoTarget, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setMaxMotorForce, arginfo_class_Bullet_Generic6DofSpring2Constraint_setMaxMotorForce, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, enableSpring, arginfo_class_Bullet_Generic6DofSpring2Constraint_enableSpring, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setStiffness, arginfo_class_Bullet_Generic6DofSpring2Constraint_setStiffness, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setDamping, arginfo_class_Bullet_Generic6DofSpring2Constraint_setDamping, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -238,6 +429,11 @@ static const zend_function_entry class_Bullet_RigidBody_methods[] = {
 	ZEND_ME(Bullet_RigidBody, getOrientation, arginfo_class_Bullet_RigidBody_getOrientation, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, setOrientation, arginfo_class_Bullet_RigidBody_setOrientation, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, setMass, arginfo_class_Bullet_RigidBody_setMass, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, setRestitution, arginfo_class_Bullet_RigidBody_setRestitution, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, setFriction, arginfo_class_Bullet_RigidBody_setFriction, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, setRollingFriction, arginfo_class_Bullet_RigidBody_setRollingFriction, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, setSpinningFriction, arginfo_class_Bullet_RigidBody_setSpinningFriction, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, setContactStiffnessAndDamping, arginfo_class_Bullet_RigidBody_setContactStiffnessAndDamping, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, getTransform, arginfo_class_Bullet_RigidBody_getTransform, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, applyForce, arginfo_class_Bullet_RigidBody_applyForce, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, applyCentralForce, arginfo_class_Bullet_RigidBody_applyCentralForce, ZEND_ACC_PUBLIC)
@@ -302,24 +498,24 @@ static zend_class_entry *register_class_Bullet_CylinderShape(zend_class_entry *c
 	return class_entry;
 }
 
-static zend_class_entry *register_class_Bullet_CylinderShapeX(zend_class_entry *class_entry_Bullet_CylinderShape)
+static zend_class_entry *register_class_Bullet_CylinderShapeX(zend_class_entry *class_entry_Bullet_CollisionShape)
 {
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Bullet", "CylinderShapeX", class_Bullet_CylinderShapeX_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
-	zend_class_implements(class_entry, 1, class_entry_Bullet_CylinderShape);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_CollisionShape);
 
 	return class_entry;
 }
 
-static zend_class_entry *register_class_Bullet_CylinderShapeZ(zend_class_entry *class_entry_Bullet_CylinderShape)
+static zend_class_entry *register_class_Bullet_CylinderShapeZ(zend_class_entry *class_entry_Bullet_CollisionShape)
 {
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Bullet", "CylinderShapeZ", class_Bullet_CylinderShapeZ_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
-	zend_class_implements(class_entry, 1, class_entry_Bullet_CylinderShape);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_CollisionShape);
 
 	return class_entry;
 }
@@ -361,6 +557,39 @@ static zend_class_entry *register_class_Bullet_HingeConstraint(zend_class_entry 
 	zend_class_entry ce, *class_entry;
 
 	INIT_NS_CLASS_ENTRY(ce, "Bullet", "HingeConstraint", class_Bullet_HingeConstraint_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_SliderConstraint(zend_class_entry *class_entry_Bullet_Constraint)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "SliderConstraint", class_Bullet_SliderConstraint_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_Generic6DofSpringConstraint(zend_class_entry *class_entry_Bullet_Constraint)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "Generic6DofSpringConstraint", class_Bullet_Generic6DofSpringConstraint_methods);
+	class_entry = zend_register_internal_class_ex(&ce, NULL);
+	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
+
+	return class_entry;
+}
+
+static zend_class_entry *register_class_Bullet_Generic6DofSpring2Constraint(zend_class_entry *class_entry_Bullet_Constraint)
+{
+	zend_class_entry ce, *class_entry;
+
+	INIT_NS_CLASS_ENTRY(ce, "Bullet", "Generic6DofSpring2Constraint", class_Bullet_Generic6DofSpring2Constraint_methods);
 	class_entry = zend_register_internal_class_ex(&ce, NULL);
 	zend_class_implements(class_entry, 1, class_entry_Bullet_Constraint);
 

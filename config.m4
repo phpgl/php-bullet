@@ -57,6 +57,9 @@ if test "$PHP_BULLET3" != "no"; then
     BULLET3_LIBS="-lBulletDynamics -lBulletCollision -lLinearMath"
   fi
 
+  # dependes on glfw
+  PHP_ADD_EXTENSION_DEP([bullet3], [glfw], [true])
+
   # add bullet libs
   PHP_ADD_LIBRARY_WITH_PATH([BulletDynamics], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])
   PHP_ADD_LIBRARY_WITH_PATH([BulletCollision], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])

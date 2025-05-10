@@ -1,5 +1,6 @@
 #include "bullet3_bridge.h"
 #include "btBulletDynamicsCommon.h"
+#include "BulletDynamics/ConstraintSolver/btGeneric6DofSpring2Constraint.h"
 
 struct btDynamicsWorldWrapper {
     btDefaultCollisionConfiguration* collisionConfiguration;
@@ -29,7 +30,7 @@ struct btTypedConstraintWrapper {
  * 
  * ----------------------------------------------------------------------------
  */
-btVector3 vec3_to_btVector3(vec3 *v)
+btVector3 vec3_to_btVector3(const vec3 *v)
 {
     return btVector3((*v)[0], (*v)[1], (*v)[2]);
 }
@@ -37,6 +38,13 @@ btVector3 vec3_to_btVector3(vec3 *v)
 btQuaternion quat_to_btQuaternion(quat *q)
 {
     return btQuaternion((*q)[1], (*q)[2], (*q)[3], (*q)[0]);
+}
+
+btTransform mat4x4_to_btTransform(mat4x4 *m)
+{
+    btTransform transform;
+    transform.setFromOpenGLMatrix((*m)[0]);
+    return transform;
 }
 
 void btVector3_to_vec3(btVector3 *v, vec3 *out)
@@ -209,6 +217,145 @@ btTypedConstraintWrapper *btHingeConstraint_create(btRigidBodyWrapper *bodyA, bt
     return wrapper;
 }
 
+void btHingeConstraint_setLimit(btTypedConstraintWrapper *constraint, float low, float high, float softness, float biasFactor, float relaxationFactor)
+{
+    btHingeConstraint *hinge = static_cast<btHingeConstraint *>(constraint->constraint);
+    hinge->setLimit(low, high, softness, biasFactor, relaxationFactor);
+}
+
+btTypedConstraintWrapper *btSliderConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, mat4x4 *frameInA, mat4x4 *frameInB, bool useLinearReferenceFrameA)
+{
+    btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
+    wrapper->constraint = new btSliderConstraint(*bodyA->rigidBody, *bodyB->rigidBody, mat4x4_to_btTransform(frameInA), mat4x4_to_btTransform(frameInB), useLinearReferenceFrameA);
+    return wrapper;
+}
+
+btTypedConstraintWrapper *btGeneric6DofSpringConstraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, mat4x4 *frameInA, mat4x4 *frameInB, bool useLinearReferenceFrameA)
+{
+    btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
+    wrapper->constraint = new btGeneric6DofSpringConstraint(*bodyA->rigidBody, *bodyB->rigidBody, mat4x4_to_btTransform(frameInA), mat4x4_to_btTransform(frameInB), useLinearReferenceFrameA);
+    return wrapper;
+}
+// btRigidBody & rbA, btRigidBody & rbB, const btTransform& frameInA, const btTransform& frameInB, RotateOrder rotOrder = RO_XYZ);
+btTypedConstraintWrapper *btGeneric6DofSpring2Constraint_create(btRigidBodyWrapper *bodyA, btRigidBodyWrapper *bodyB, mat4x4 *frameInA, mat4x4 *frameInB)
+{
+    btTypedConstraintWrapper *wrapper = new btTypedConstraintWrapper;
+    wrapper->constraint = new btGeneric6DofSpring2Constraint(*bodyA->rigidBody, *bodyB->rigidBody, mat4x4_to_btTransform(frameInA), mat4x4_to_btTransform(frameInB), RO_XYZ);
+    return wrapper;
+}
+
+void btGeneric6DofSpring2Constraint_setFrames(btTypedConstraintWrapper *constraint, mat4x4 *frameInA, mat4x4 *frameInB)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setFrames(mat4x4_to_btTransform(frameInA), mat4x4_to_btTransform(frameInB));
+}
+
+void btGeneric6DofSpring2Constraint_setLinearLowerLimit(btTypedConstraintWrapper *constraint, const vec3 *linearLower)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setLinearLowerLimit(vec3_to_btVector3(linearLower));
+}
+
+void btGeneric6DofSpring2Constraint_setLinearUpperLimit(btTypedConstraintWrapper *constraint, const vec3 *linearUpper)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setLinearUpperLimit(vec3_to_btVector3(linearUpper));
+}
+
+void btGeneric6DofSpring2Constraint_setAngularLowerLimit(btTypedConstraintWrapper *constraint, const vec3 *angularLower)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setAngularLowerLimit(vec3_to_btVector3(angularLower));
+}
+void btGeneric6DofSpring2Constraint_setAngularLowerLimitReversed(btTypedConstraintWrapper *constraint, const vec3 *angularLower)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setAngularLowerLimitReversed(vec3_to_btVector3(angularLower));
+}
+
+void btGeneric6DofSpring2Constraint_setAngularUpperLimit(btTypedConstraintWrapper *constraint, const vec3 *angularUpper)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setAngularUpperLimit(vec3_to_btVector3(angularUpper));
+}
+void btGeneric6DofSpring2Constraint_setAngularUpperLimitReversed(btTypedConstraintWrapper *constraint, const vec3 *angularUpper)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setAngularUpperLimitReversed(vec3_to_btVector3(angularUpper));
+}
+
+void btGeneric6DofSpring2Constraint_setLimit(btTypedConstraintWrapper *constraint, int axis, float lo, float hi)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setLimit(axis, lo, hi);
+}
+void btGeneric6DofSpring2Constraint_setLimitReversed(btTypedConstraintWrapper *constraint, int axis, float lo, float hi)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setLimitReversed(axis, lo, hi);
+}
+
+void btGeneric6DofSpring2Constraint_setAxis(btTypedConstraintWrapper *constraint, vec3 *axis1, vec3 *axis2)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setAxis(vec3_to_btVector3(axis1), vec3_to_btVector3(axis2));
+}
+
+void btGeneric6DofSpring2Constraint_setBounce(btTypedConstraintWrapper *constraint, int index, float bounce)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setBounce(index, bounce);
+}
+
+void btGeneric6DofSpring2Constraint_enableMotor(btTypedConstraintWrapper *constraint, int index, bool onOff)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->enableMotor(index, onOff);
+}
+
+void btGeneric6DofSpring2Constraint_setServo(btTypedConstraintWrapper *constraint, int index, bool onOff)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setServo(index, onOff);
+}
+
+void btGeneric6DofSpring2Constraint_setTargetVelocity(btTypedConstraintWrapper *constraint, int index, float velocity)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setTargetVelocity(index, velocity);
+}
+
+void btGeneric6DofSpring2Constraint_setServoTarget(btTypedConstraintWrapper *constraint, int index, float target)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setServoTarget(index, target);
+}
+
+void btGeneric6DofSpring2Constraint_setMaxMotorForce(btTypedConstraintWrapper *constraint, int index, float force)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setMaxMotorForce(index, force);
+}
+
+void btGeneric6DofSpring2Constraint_enableSpring(btTypedConstraintWrapper *constraint, int index, bool onOff)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->enableSpring(index, onOff);
+}
+
+void btGeneric6DofSpring2Constraint_setStiffness(btTypedConstraintWrapper *constraint, int index, float stiffness, bool limitIfNeeded)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setStiffness(index, stiffness, limitIfNeeded);
+}
+
+void btGeneric6DofSpring2Constraint_setDamping(btTypedConstraintWrapper *constraint, int index, float damping, bool limitIfNeeded)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setDamping(index, damping, limitIfNeeded);
+}
+
+
 /**
  * Rigid body
  * 
@@ -259,6 +406,21 @@ void btRigidBody_setMass(btRigidBodyWrapper *body, float mass)
     body->rigidBody->setMassProps(mass, localInertia);
 }
 
+void btRigidBody_setRestitution(btRigidBodyWrapper *body, float restitution) {
+    body->rigidBody->setRestitution(restitution);
+}
+void btRigidBody_setFriction(btRigidBodyWrapper *body, float friction) {
+    body->rigidBody->setFriction(friction);
+}
+void btRigidBody_setRollingFriction(btRigidBodyWrapper *body, float rollingFriction) {
+    body->rigidBody->setRollingFriction(rollingFriction);
+}
+void btRigidBody_setSpinningFriction(btRigidBodyWrapper *body, float spinningFriction) {
+    body->rigidBody->setSpinningFriction(spinningFriction);
+}
+void btRigidBody_setContactStiffnessAndDamping(btRigidBodyWrapper *body, float stiffness, float damping) {
+    body->rigidBody->setContactStiffnessAndDamping(stiffness, damping);
+}
 
 void btRigidBody_getPosition(btRigidBodyWrapper *bodyWrapper, vec3 *position) {
     btVector3 btPosition = bodyWrapper->rigidBody->getWorldTransform().getOrigin();

@@ -485,6 +485,81 @@ PHP_METHOD(Bullet_RigidBody, setMass)
 }
 
 /**
+ * Bullet\RigidBody::setRestitution
+ */
+PHP_METHOD(Bullet_RigidBody, setRestitution)
+{
+    double restitution;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "d", &restitution) == FAILURE) {
+        return;
+    }
+
+    btRigidBody_setRestitution(intern->bt_rigidbody, restitution);
+}
+
+/**
+ * Bullet\RigidBody::setFriction
+ */
+PHP_METHOD(Bullet_RigidBody, setFriction)
+{
+    double friction;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "d", &friction) == FAILURE) {
+        return;
+    }
+
+    btRigidBody_setFriction(intern->bt_rigidbody, friction);
+}
+
+/**
+ * Bullet\RigidBody::setRollingFriction
+ */
+PHP_METHOD(Bullet_RigidBody, setRollingFriction)
+{
+    double rollingFriction;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "d", &rollingFriction) == FAILURE) {
+        return;
+    }
+
+    btRigidBody_setRollingFriction(intern->bt_rigidbody, rollingFriction);
+}
+
+/**
+ * Bullet\RigidBody::setSpinningFriction
+ */
+PHP_METHOD(Bullet_RigidBody, setSpinningFriction)
+{
+    double spinningFriction;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "d", &spinningFriction) == FAILURE) {
+        return;
+    }
+
+    btRigidBody_setSpinningFriction(intern->bt_rigidbody, spinningFriction);
+}
+
+/**
+ * Bullet\RigidBody::setContactStiffnessAndDamping
+ */
+PHP_METHOD(Bullet_RigidBody, setContactStiffnessAndDamping)
+{
+    double stiffness, damping;
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "dd", &stiffness, &damping) == FAILURE) {
+        return;
+    }
+
+    btRigidBody_setContactStiffnessAndDamping(intern->bt_rigidbody, stiffness, damping);
+}
+
+/**
  * Buller\RigidBody::getTransform (mat4)
  */
 PHP_METHOD(Bullet_RigidBody, getTransform)

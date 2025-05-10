@@ -39,12 +39,12 @@ class CylinderShape implements CollisionShape
     public function __construct(\GL\Math\Vec3 $halfExtents) {}
 }
 
-class CylinderShapeX implements CylinderShape
+class CylinderShapeX implements CollisionShape
 {
     public function __construct(\GL\Math\Vec3 $halfExtents) {}
 }
 
-class CylinderShapeZ implements CylinderShape
+class CylinderShapeZ implements CollisionShape
 {
     public function __construct(\GL\Math\Vec3 $halfExtents) {}
 }
@@ -78,6 +78,69 @@ class HingeConstraint implements Constraint
         \GL\Math\Vec3 $axisInA,
         \GL\Math\Vec3 $axisInB
     ) {}
+
+    public function setLimit(float $low, float $high, float $softness = 0.9, float $biasFactor = 0.3, float $relaxationFactor = 1.0): void {}
+}
+
+class SliderConstraint implements Constraint
+{
+    public function __construct(
+        RigidBody $bodyA,
+        RigidBody $bodyB,
+        \GL\Math\Mat4 $frameInA,
+        \GL\Math\Mat4 $frameInB,
+        bool $useLinearReferenceFrameA = true
+    ) {}
+}
+
+class Generic6DofSpringConstraint implements Constraint
+{
+    public function __construct(
+        RigidBody $bodyA,
+        RigidBody $bodyB,
+        \GL\Math\Mat4 $frameInA,
+        \GL\Math\Mat4 $frameInB,
+        bool $useLinearReferenceFrameA = true
+    ) {}
+}
+
+class Generic6DofSpring2Constraint implements Constraint
+{
+    public function __construct(
+        RigidBody $bodyA,
+        RigidBody $bodyB,
+        \GL\Math\Mat4 $frameInA,
+        \GL\Math\Mat4 $frameInB
+    ) {}
+
+
+    public function setFrames(\GL\Math\Mat4 $frameInA, \GL\Math\Mat4 $frameInB): void {}
+    public function setLinearLowerLimit(\GL\Math\Vec3 $linearLower): void {}
+    
+    public function setLinearUpperLimit(\GL\Math\Vec3 $linearUpper): void {}
+    
+    public function setAngularLowerLimit(\GL\Math\Vec3 $angularLower): void {}
+    public function setAngularLowerLimitReversed(\GL\Math\Vec3 $angularLower): void {}
+
+    public function setAngularUpperLimit(\GL\Math\Vec3 $angularUpper): void {}
+    public function setAngularUpperLimitReversed(\GL\Math\Vec3 $angularUpper): void {}
+
+    public function setLimit(int $axis, float $lo, float $hi): void {}
+    public function setLimitReversed(int $axis, float $lo, float $hi): void {}
+
+    public function setAxis(int $index, \GL\Math\Vec3 $axis): void {}
+
+    public function setBounce(int $index, float $bounce): void {}
+
+    public function enableMotor(int $index, bool $onOff): void {}
+    public function setServo(int $index, bool $onOff): void {}
+    public function setTargetVelocity(int $index, float $velocity): void {}
+    public function setServoTarget(int $index, float $target): void {}
+    public function setMaxMotorForce(int $index, float $force): void {}
+
+    public function enableSpring(int $index, bool $onOff): void {}
+    public function setStiffness(int $index, float $stiffness, bool $limitIfNeeded = true): void {}
+    public function setDamping(int $index, float $damping, bool $limitIfNeeded = true): void {}
 }
 
 class RigidBody
@@ -93,6 +156,12 @@ class RigidBody
     public function getOrientation(): \GL\Math\Quat {}
     public function setOrientation(\GL\Math\Quat $orientation): void {}
     public function setMass(float $mass): void {}
+    public function setRestitution(float $restitution): void {}
+    public function setFriction(float $friction): void {}
+    public function setRollingFriction(float $rollingFriction): void {}
+    public function setSpinningFriction(float $spinningFriction): void {}
+    public function setContactStiffnessAndDamping(float $stiffness, float $damping): void {}
+
     public function getTransform(): \GL\Math\Mat4 {}
     public function applyForce(\GL\Math\Vec3 $force, \GL\Math\Vec3 $relPos): void {}
     public function applyCentralForce(\GL\Math\Vec3 $force): void {}
