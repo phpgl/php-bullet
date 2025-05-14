@@ -2,6 +2,7 @@
 #define BULLET3_BRIDGE_H
 
 #include "glfw/linmath.h"
+#include "glfw/phpglfw_buffer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,6 +12,7 @@ typedef struct btDynamicsWorldWrapper btDynamicsWorldWrapper;
 typedef struct btRigidBodyWrapper btRigidBodyWrapper;
 typedef struct btCollisionShapeWrapper btCollisionShapeWrapper;
 typedef struct btTypedConstraintWrapper btTypedConstraintWrapper;
+typedef struct btDebugRendererWrapper btDebugRendererWrapper;
 
 /**
  * Physics world
@@ -29,6 +31,12 @@ void btDynamicsWorld_addConstraint(btDynamicsWorldWrapper *world, btTypedConstra
 void btDynamicsWorld_removeConstraint(btDynamicsWorldWrapper *world, btTypedConstraintWrapper *constraint);
 
 void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *world, float timeStep);
+
+// attach debug renderer
+void btDynamicsWorld_setDebugRenderer(btDynamicsWorldWrapper *world, btDebugRendererWrapper *renderer);
+void btDynamicsWorld_debugDrawWorld(btDynamicsWorldWrapper *world);
+void btDynamicsWorld_enableDebugDrawing(btDynamicsWorldWrapper *world);
+void btDynamicsWorld_setDebugDrawVP(btDynamicsWorldWrapper *world, mat4x4 *vpMatrix);
 
 /**
  * Collision shape
@@ -104,6 +112,8 @@ void btGeneric6DofSpring2Constraint_enableSpring(btTypedConstraintWrapper *const
 void btGeneric6DofSpring2Constraint_setStiffness(btTypedConstraintWrapper *constraint, int index, float stiffness, bool limitIfNeeded);
 void btGeneric6DofSpring2Constraint_setDamping(btTypedConstraintWrapper *constraint, int index, float damping, bool limitIfNeeded);
 
+void btGeneric6DofSpring2Constraint_setEquilibriumPoint(btTypedConstraintWrapper *constraint);
+
 /**
  * Rigid body
  * 
@@ -137,6 +147,18 @@ void btRigidBody_applyCentralImpulse(btRigidBodyWrapper *body, vec3 *impulse);
 void btRigidBody_applyTorqueImpulse(btRigidBodyWrapper *body, vec3 *torque);
 
 void btRigidBody_activate(btRigidBodyWrapper *body);
+void btRigidBody_disableDeactivation(btRigidBodyWrapper *body);
+
+/**
+ * Debug renderer
+ * 
+ * ----------------------------------------------------------------------------
+ */
+btDebugRendererWrapper *btDebugRenderer_create();
+void btDebugRenderer_destroy(btDebugRendererWrapper *renderer);
+
+// methods
+void btDebugRenderer_setVP(btDebugRendererWrapper *renderer, mat4x4 *vpMatrix);
 
 
 #ifdef __cplusplus

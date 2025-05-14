@@ -18,6 +18,10 @@ class World
     public function removeConstraint(Constraint $constraint): void {}
     
     public function stepSimulation(float $timeStep, int $maxSubSteps = 1, float $fixedTimeStep = 0.01666666): void {}
+
+    public function enableDebugDrawing(): void {}
+    public function debugDrawWorld(): void {}
+    public function setDebugDrawVP(\GL\Math\Mat4 $viewProjection): void {}
 }
 
 interface CollisionShape
@@ -141,6 +145,8 @@ class Generic6DofSpring2Constraint implements Constraint
     public function enableSpring(int $index, bool $onOff): void {}
     public function setStiffness(int $index, float $stiffness, bool $limitIfNeeded = true): void {}
     public function setDamping(int $index, float $damping, bool $limitIfNeeded = true): void {}
+
+    public function setEquilibriumPoint(): void {}
 }
 
 class RigidBody
@@ -171,6 +177,7 @@ class RigidBody
     public function applyTorqueImpulse(\GL\Math\Vec3 $torque): void {}
 
     public function activate(): void {}
+    public function disableDeactivation(): void {}
 }
 
 function bullet3_test(): void {}

@@ -59,6 +59,9 @@ if test "$PHP_BULLET3" != "no"; then
 
   # dependes on glfw
   PHP_ADD_EXTENSION_DEP([bullet3], [glfw], [true])
+  PHP_ADD_INCLUDE([`php-config --include-dir`/ext/glfw/vendor/glad/include])
+  PHP_ADD_INCLUDE([`php-config --include-dir`/ext/glfw/vendor/GLFW/include])
+  PHP_ADD_INCLUDE([`php-config --include-dir`/ext/glfw/vendor/cvector])
 
   # add bullet libs
   PHP_ADD_LIBRARY_WITH_PATH([BulletDynamics], [$BULLET3_BUILD_DIR/lib], [BULLET3_SHARED_LIBADD])

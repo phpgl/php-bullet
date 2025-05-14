@@ -2,6 +2,10 @@
 #include "btBulletDynamicsCommon.h"
 #include "BulletDynamics/ConstraintSolver/btGeneric6DofSpring2Constraint.h"
 
+#include <iostream>
+#include <vector>
+#include <string>
+
 struct btDynamicsWorldWrapper {
     btDefaultCollisionConfiguration* collisionConfiguration;
     btCollisionDispatcher *dispatcher;
@@ -135,6 +139,35 @@ void btDynamicsWorld_removeConstraint(btDynamicsWorldWrapper *worldWrapper, btTy
 
 void btDynamicsWorld_stepSimulation(btDynamicsWorldWrapper *worldWrapper, float timeStep) {
     worldWrapper->dynamicsWorld->stepSimulation(timeStep);
+}
+
+void btDynamicsWorld_setDebugRenderer(btDynamicsWorldWrapper *world, btDebugRendererWrapper *renderer)
+{
+    world->dynamicsWorld->setDebugDrawer(renderer->debugDrawer);
+}
+
+void btDynamicsWorld_debugDrawWorld(btDynamicsWorldWrapper *world)
+{
+    world->dynamicsWorld->debugDrawWorld();
+}
+
+void btDynamicsWorld_enableDebugDrawing(btDynamicsWorldWrapper *world)
+{
+    phpglfwBtDebugDraw *debugDrawer = new phpglfwBtDebugDraw();
+    debugDrawer->setDebugMode(
+        btIDebugDraw::DBG_DrawWireframe | 
+        btIDebugDraw::DBG_DrawConstraints 
+        // btIDebugDraw::DBG_DrawAabb | 
+        // btIDebugDraw::DBG_DrawContactPoints | 
+        // btIDebugDraw::DBG_DrawNormals
+    );
+    world->dynamicsWorld->setDebugDrawer(debugDrawer);
+}
+
+void btDynamicsWorld_setDebugDrawVP(btDynamicsWorldWrapper *world, mat4x4 *vpMatrix)
+{
+    phpglfwBtDebugDraw *debugDrawer = static_cast<phpglfwBtDebugDraw *>(world->dynamicsWorld->getDebugDrawer());
+    debugDrawer->setViewProjection(&(*vpMatrix)[0][0]);
 }
 
 /**
@@ -355,6 +388,11 @@ void btGeneric6DofSpring2Constraint_setDamping(btTypedConstraintWrapper *constra
     g6dof->setDamping(index, damping, limitIfNeeded);
 }
 
+void btGeneric6DofSpring2Constraint_setEquilibriumPoint(btTypedConstraintWrapper *constraint)
+{
+    btGeneric6DofSpring2Constraint *g6dof = static_cast<btGeneric6DofSpring2Constraint *>(constraint->constraint);
+    g6dof->setEquilibriumPoint();
+}
 
 /**
  * Rigid body
@@ -472,4 +510,34 @@ void btRigidBody_applyTorqueImpulse(btRigidBodyWrapper *body, vec3 *torque) {
 
 void btRigidBody_activate(btRigidBodyWrapper *body) {
     body->rigidBody->activate();
+}
+
+void btRigidBody_disableDeactivation(btRigidBodyWrapper *body) {
+    body->rigidBody->setActivationState(DISABLE_DEACTIVATION);
+}
+
+/**
+ * Debug renderer
+ * 
+ * ----------------------------------------------------------------------------
+ */
+
+
+btDebugRendererWrapper *btDebugRenderer_create()
+{
+    btDebugRendererWrapper *wrapper = new btDebugRendererWrapper;
+    wrapper->debugDrawer = new phpglfwBtDebugDraw();
+    return wrapper;
+}
+
+
+void btDebugRenderer_destroy(btDebugRendererWrapper *renderer)
+{
+    delete renderer->debugDrawer;
+    delete renderer;
+}
+
+void btDebugRenderer_setVP(btDebugRendererWrapper *renderer, mat4x4 *vpMatrix)
+{
+    renderer->debugDrawer->setViewProjection(&(*vpMatrix)[0][0]);
 }

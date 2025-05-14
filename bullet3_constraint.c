@@ -740,7 +740,14 @@ PHP_METHOD(Bullet_Generic6DofSpring2Constraint, setDamping)
     );
 }
 
+PHP_METHOD(Bullet_Generic6DofSpring2Constraint, setEquilibriumPoint)
+{
+    phpbullet3_constraint_wrapper_object *intern = phpbullet3_constraint_from_zobj_p(Z_OBJ_P(getThis()));
 
+    btGeneric6DofSpring2Constraint_setEquilibriumPoint(
+        intern->bt_constraint
+    );
+}
 
 /**
  * Register the “Constraint” module

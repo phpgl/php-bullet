@@ -259,6 +259,43 @@ PHP_METHOD(Bullet_World, stepSimulation)
 }
 
 /**
+ * Bullet\World::enableDebugDrawing
+ */
+PHP_METHOD(Bullet_World, enableDebugDrawing)
+{
+    phpbullet3_world_object *intern = phpbullet3_world_from_zobj_p(Z_OBJ_P(getThis()));
+
+    btDynamicsWorld_enableDebugDrawing(intern->bt_world);
+}
+
+/**
+ * Bullet\World::debugDrawWorld
+ */
+PHP_METHOD(Bullet_World, debugDrawWorld)
+{
+    phpbullet3_world_object *intern = phpbullet3_world_from_zobj_p(Z_OBJ_P(getThis()));
+
+    btDynamicsWorld_debugDrawWorld(intern->bt_world);
+}
+
+/**
+ * Bullet\World::setDebugDrawVP
+ */
+PHP_METHOD(Bullet_World, setDebugDrawVP)
+{
+    zval *viewProjection;
+    phpbullet3_world_object *intern = phpbullet3_world_from_zobj_p(Z_OBJ_P(getThis()));
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() , "O", &viewProjection, phpglfw_get_math_mat4_ce()) == FAILURE) {
+        return;
+    }
+
+    phpglfw_math_mat4_object *mat4_ptr = phpglfw_math_mat4_objectptr_from_zobj_p(Z_OBJ_P(viewProjection));
+
+    btDynamicsWorld_setDebugDrawVP(intern->bt_world, &mat4_ptr->data);
+}
+
+/**
  * Bullet\CollisionShape
  * 
  * ----------------------------------------------------------------------------
@@ -710,8 +747,6 @@ PHP_METHOD(Bullet_RigidBody, applyTorqueImpulse)
     btRigidBody_applyTorqueImpulse(intern->bt_rigidbody, &vec3_ptr->data);
 }
 
-
-
 /**
  * Bullet\RigidBody::activate
  */
@@ -720,6 +755,16 @@ PHP_METHOD(Bullet_RigidBody, activate)
     phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
 
     btRigidBody_activate(intern->bt_rigidbody);
+}
+
+/**
+ * Bullet\RigidBody::disableDeactivation
+ */
+PHP_METHOD(Bullet_RigidBody, disableDeactivation)
+{
+    phpbullet3_rigidbody_object *intern = phpbullet3_rigidbody_from_zobj_p(Z_OBJ_P(getThis()));
+
+    btRigidBody_disableDeactivation(intern->bt_rigidbody);
 }
 
 /**

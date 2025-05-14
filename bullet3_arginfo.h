@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: 1284a5172e9820d014ed2c4c7ec42ada0b87dddc */
+ * Stub hash: 127ca9a9fb209aa2f26c59956d95afc1ce3d208d */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_Bullet_bullet3_test, 0, 0, IS_VOID, 0)
 ZEND_END_ARG_INFO()
@@ -28,6 +28,14 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_World_stepSimulatio
 	ZEND_ARG_TYPE_INFO(0, timeStep, IS_DOUBLE, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, maxSubSteps, IS_LONG, 0, "1")
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, fixedTimeStep, IS_DOUBLE, 0, "0.01666666")
+ZEND_END_ARG_INFO()
+
+#define arginfo_class_Bullet_World_enableDebugDrawing arginfo_Bullet_bullet3_test
+
+#define arginfo_class_Bullet_World_debugDrawWorld arginfo_Bullet_bullet3_test
+
+ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_World_setDebugDrawVP, 0, 1, IS_VOID, 0)
+	ZEND_ARG_OBJ_INFO(0, viewProjection, GL\\Math\\Mat4, 0)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_SphereShape___construct, 0, 0, 1)
@@ -169,6 +177,8 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_class_Bullet_Generic6DofSpring2C
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, limitIfNeeded, _IS_BOOL, 0, "true")
 ZEND_END_ARG_INFO()
 
+#define arginfo_class_Bullet_Generic6DofSpring2Constraint_setEquilibriumPoint arginfo_Bullet_bullet3_test
+
 ZEND_BEGIN_ARG_INFO_EX(arginfo_class_Bullet_RigidBody___construct, 0, 0, 1)
 	ZEND_ARG_OBJ_INFO(0, collisionShape, Bullet\\CollisionShape, 0)
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, mass, IS_DOUBLE, 0, "0.0")
@@ -245,6 +255,8 @@ ZEND_END_ARG_INFO()
 
 #define arginfo_class_Bullet_RigidBody_activate arginfo_Bullet_bullet3_test
 
+#define arginfo_class_Bullet_RigidBody_disableDeactivation arginfo_Bullet_bullet3_test
+
 
 ZEND_FUNCTION(Bullet_bullet3_test);
 ZEND_METHOD(Bullet_World, setGravity);
@@ -253,6 +265,9 @@ ZEND_METHOD(Bullet_World, addRigidBody);
 ZEND_METHOD(Bullet_World, addConstraint);
 ZEND_METHOD(Bullet_World, removeConstraint);
 ZEND_METHOD(Bullet_World, stepSimulation);
+ZEND_METHOD(Bullet_World, enableDebugDrawing);
+ZEND_METHOD(Bullet_World, debugDrawWorld);
+ZEND_METHOD(Bullet_World, setDebugDrawVP);
 ZEND_METHOD(Bullet_SphereShape, __construct);
 ZEND_METHOD(Bullet_BoxShape, __construct);
 ZEND_METHOD(Bullet_CylinderShape, __construct);
@@ -284,6 +299,7 @@ ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setMaxMotorForce);
 ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, enableSpring);
 ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setStiffness);
 ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setDamping);
+ZEND_METHOD(Bullet_Generic6DofSpring2Constraint, setEquilibriumPoint);
 ZEND_METHOD(Bullet_RigidBody, __construct);
 ZEND_METHOD(Bullet_RigidBody, setPosition);
 ZEND_METHOD(Bullet_RigidBody, getPosition);
@@ -305,6 +321,7 @@ ZEND_METHOD(Bullet_RigidBody, applyImpulse);
 ZEND_METHOD(Bullet_RigidBody, applyCentralImpulse);
 ZEND_METHOD(Bullet_RigidBody, applyTorqueImpulse);
 ZEND_METHOD(Bullet_RigidBody, activate);
+ZEND_METHOD(Bullet_RigidBody, disableDeactivation);
 
 
 static const zend_function_entry ext_functions[] = {
@@ -320,6 +337,9 @@ static const zend_function_entry class_Bullet_World_methods[] = {
 	ZEND_ME(Bullet_World, addConstraint, arginfo_class_Bullet_World_addConstraint, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_World, removeConstraint, arginfo_class_Bullet_World_removeConstraint, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_World, stepSimulation, arginfo_class_Bullet_World_stepSimulation, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_World, enableDebugDrawing, arginfo_class_Bullet_World_enableDebugDrawing, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_World, debugDrawWorld, arginfo_class_Bullet_World_debugDrawWorld, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_World, setDebugDrawVP, arginfo_class_Bullet_World_setDebugDrawVP, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -416,6 +436,7 @@ static const zend_function_entry class_Bullet_Generic6DofSpring2Constraint_metho
 	ZEND_ME(Bullet_Generic6DofSpring2Constraint, enableSpring, arginfo_class_Bullet_Generic6DofSpring2Constraint_enableSpring, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setStiffness, arginfo_class_Bullet_Generic6DofSpring2Constraint_setStiffness, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setDamping, arginfo_class_Bullet_Generic6DofSpring2Constraint_setDamping, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_Generic6DofSpring2Constraint, setEquilibriumPoint, arginfo_class_Bullet_Generic6DofSpring2Constraint_setEquilibriumPoint, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 
@@ -442,6 +463,7 @@ static const zend_function_entry class_Bullet_RigidBody_methods[] = {
 	ZEND_ME(Bullet_RigidBody, applyCentralImpulse, arginfo_class_Bullet_RigidBody_applyCentralImpulse, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, applyTorqueImpulse, arginfo_class_Bullet_RigidBody_applyTorqueImpulse, ZEND_ACC_PUBLIC)
 	ZEND_ME(Bullet_RigidBody, activate, arginfo_class_Bullet_RigidBody_activate, ZEND_ACC_PUBLIC)
+	ZEND_ME(Bullet_RigidBody, disableDeactivation, arginfo_class_Bullet_RigidBody_disableDeactivation, ZEND_ACC_PUBLIC)
 	ZEND_FE_END
 };
 

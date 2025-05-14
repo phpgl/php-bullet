@@ -25,11 +25,13 @@ use VISU\Graphics\{RenderTarget, Viewport, Camera, CameraProjectionMode};
 use VISU\Graphics\Rendering\RenderContext;
 use VISU\Geo\Transform;
 use VISU\Graphics\Rendering\Pass\BackbufferData;
+use VISU\Graphics\Rendering\Pass\CameraData;
 use VISU\Graphics\Rendering\Renderer\Debug3DRenderer;
 use VISU\Graphics\Rendering\Resource\RenderTargetResource;
 use VISU\OS\{InputActionMap, Key};
 
 use VISU\Quickstart\QuickstartApp;
+use VISU\Quickstart\Render\QuickstartDebugMetricsOverlay;
 use VISU\System\VISUCameraSystem;
 use VISU\System\VISULowPoly\LPModelCollection;
 use VISU\System\VISULowPoly\LPObjLoader;
@@ -64,6 +66,16 @@ class AppExample2 extends QuickstartApp
     /**
      * Car wheels
      */
+    private int $frontLeftWheel;
+    private int $frontRightWheel;
+    private int $rearLeftWheel;
+    private int $rearRightWheel;
+
+    private float $steerAngle = 0.0;
+    private const MAX_STEER   = 0.5;
+    private const STEER_SPEED = 0.05; 
+    private const STEER_AXIS  = 4;   // rot Y (yaw)
+    private const DRIVE_AXIS  = 3;   // rot X
 
     /**
      * A function that is invoked once the app is ready to run.
@@ -147,6 +159,7 @@ class AppExample2 extends QuickstartApp
 
         // create the physics world
         $this->physicsWorld = new World();
+        $this->physicsWorld->enableDebugDrawing();
         $this->physicsWorld->setGravity(new Vec3(0, -9.81, 0));
 
         $shpereShape = new SphereShape(1);
@@ -191,7 +204,7 @@ class AppExample2 extends QuickstartApp
         $carBodyShape = new BoxShape(new Vec3(2, 0.5, 4)); 
         $carBody = $this->entities->create();
 
-        $this->carBodyRigidBody = new RigidBody($carBodyShape, 1);
+        $this->carBodyRigidBody = new RigidBody($carBodyShape, 1.0);
         $this->carBodyRigidBody->setPosition(new Vec3(0, 5, 0)); 
 
         $model = $this->entities->attach($carBody, new DynamicRenderableModel());
@@ -216,13 +229,15 @@ class AppExample2 extends QuickstartApp
 
         $localWheelAxis = new Vec3(1, 0, 0);
         $suspensionTravel = 0.25;
+        $maxSteer = 0.5;
 
-        foreach ($wheelPositions as $pos) {
+
+        foreach ($wheelPositions as $i => $pos) {
             $wheelEntity   = $this->entities->create();
             $wheelRigidBody = new RigidBody($wheelShape, 0.5);
             $wheelRigidBody->setPosition($pos);
             $wheelRigidBody->setFriction(2);
-            // $wheelRigidBody->setActivationState(RigidBody::DISABLE_DEACTIVATION);
+            $wheelRigidBody->disableDeactivation();
 
             $model = $this->entities->attach($wheelEntity, new DynamicRenderableModel());
             $model->modelIdentifier = 'cylinderx.obj';
@@ -235,9 +250,11 @@ class AppExample2 extends QuickstartApp
             $this->entities->attach($wheelEntity, $wheelRigidBody);
             
             // spring suspension
-            $frameA = new Mat4;
-            $frameA->translate($pos - new Vec3(0, 5, 0));
-            $frameB = new Mat4;
+            $frameA = new Mat4();
+            $frameA->translate($pos - $this->carBodyRigidBody->getPosition());
+
+            $frameB = new Mat4();
+            // $frameB->rotate(GLM::radians(90), new Vec3(0, 0, 1));  
 
             $suspension = new Generic6DofSpring2Constraint(
                 $this->carBodyRigidBody,
@@ -249,16 +266,45 @@ class AppExample2 extends QuickstartApp
             $suspension->setLinearLowerLimit(new Vec3(0, -$suspensionTravel, 0));
             $suspension->setLinearUpperLimit(new Vec3(0,  $suspensionTravel, 0));
 
-            $suspension->setAngularLowerLimit(new Vec3(-ANGULAR_LIMIT, 0, 0));
-            $suspension->setAngularUpperLimit(new Vec3( ANGULAR_LIMIT, 0, 0));
-
             $suspension->enableSpring(1, true);
             $suspension->setStiffness(1, 40.0);
             $suspension->setDamping(1, 0.2);
+            $suspension->setEquilibriumPoint(); 
+
+            // enable motor on rear wheels
+            if ($i >= 2) {
+                $suspension->setAngularLowerLimit(new Vec3(-ANGULAR_LIMIT, 0, 0));
+                $suspension->setAngularUpperLimit(new Vec3( ANGULAR_LIMIT, 0, 0));
+
+                $suspension->enableMotor(3, true);
+                $suspension->setMaxMotorForce(3, 1000.0);
+                $suspension->setTargetVelocity(3, 0.0);
+            }
+
+            // configure front wheels
+            if ($i <= 1) {
+                $suspension->setAngularLowerLimit(new Vec3(-ANGULAR_LIMIT, -$maxSteer, 0));
+                $suspension->setAngularUpperLimit(new Vec3( ANGULAR_LIMIT,  $maxSteer, 0));
+
+                $suspension->enableMotor(self::STEER_AXIS, true);
+                $suspension->setServo(self::STEER_AXIS, true);
+                $suspension->setMaxMotorForce(self::STEER_AXIS, 500.0);
+                $suspension->setTargetVelocity(self::STEER_AXIS, 4.0);   // ~230 °/s
+                $suspension->setServoTarget(self::STEER_AXIS, 0.0);
+            }
 
             // add to physics world & ecs
             $this->physicsWorld->addConstraint($suspension, true);
             $this->entities->attach($wheelEntity, $suspension);
+
+            // assign wheel entity references
+            // (this is a dump way to do this)
+            switch ($i) {
+                case 0: $this->frontLeftWheel  = $wheelEntity; break;
+                case 1: $this->frontRightWheel = $wheelEntity; break;
+                case 2: $this->rearLeftWheel   = $wheelEntity; break;
+                case 3: $this->rearRightWheel  = $wheelEntity; break;
+            }
         }
     }
 
@@ -289,6 +335,10 @@ class AppExample2 extends QuickstartApp
      */
     public function draw(RenderContext $context, RenderTarget $renderTarget) : void
     {
+        QuickstartDebugMetricsOverlay::debugString('Steering angle: ' . round($this->steerAngle, 2));
+        
+        $this->physicsWorld->setDebugDrawVP($context->data->get(CameraData::class)->projectionView);
+        $this->physicsWorld->debugDrawWorld();
     }
 
     /**
@@ -304,7 +354,19 @@ class AppExample2 extends QuickstartApp
     {
         parent::update();
         $this->cameraSystem->update($this->entities);
-        
+
+        $camera = $this->cameraSystem->getActiveCamera($this->entities);
+        $carPos = $this->carBodyRigidBody->getPosition();
+        $carRot = $this->carBodyRigidBody->getOrientation();
+
+        $localOffset = new Vec3(0, 2, 20);
+        $worldOffset = $carRot * $localOffset;
+        $camera->transform->position = $carPos + $worldOffset;
+        $lookAtTarget = $carPos + ($carRot * new Vec3(0, 0, 5)); 
+        $camera->transform->lookAt($lookAtTarget);
+
+
+
         // Car control
         // ------------------------------------------------------------
         // wake it up
@@ -318,23 +380,43 @@ class AppExample2 extends QuickstartApp
         $engineForce = 100.0;
         $steeringTorque = 30.0;
 
+        $flWheelSusp = $this->entities->get($this->frontLeftWheel, Generic6DofSpring2Constraint::class);
+        $frWheelSusp = $this->entities->get($this->frontRightWheel, Generic6DofSpring2Constraint::class);
+        $rlWheelSusp = $this->entities->get($this->rearLeftWheel, Generic6DofSpring2Constraint::class);
+        $rrWheelSusp = $this->entities->get($this->rearRightWheel, Generic6DofSpring2Constraint::class);
+
+        // $flWheelSusp->setTargetVelocity(3, 0.0);
+        // $frWheelSusp->setTargetVelocity(3, 0.0);
+        $rlWheelSusp->enableMotor(3, false);
+        $rrWheelSusp->enableMotor(3, false);
+
         if ($this->inputContext->actions->isButtonDown('moveForward')) {
-            $force = $worldForward * $engineForce;
-            $this->carBodyRigidBody->applyCentralForce($force);
+            $rlWheelSusp->enableMotor(3, true);
+            $rrWheelSusp->enableMotor(3, true);
+
+            $rlWheelSusp->setTargetVelocity(3, 10.0);
+            $rrWheelSusp->setTargetVelocity(3, 10.0);
         }
 
         if ($this->inputContext->actions->isButtonDown('moveBackward')) {
-            $force = $worldForward * -$engineForce;
-            $this->carBodyRigidBody->applyCentralForce($force);
+            $rlWheelSusp->enableMotor(3, true);
+            $rrWheelSusp->enableMotor(3, true);
+
+            $rlWheelSusp->setTargetVelocity(3, -10.0);
+            $rrWheelSusp->setTargetVelocity(3, -10.0);
         }
 
         if ($this->inputContext->actions->isButtonDown('turnLeft')) {
-            $this->carBodyRigidBody->applyTorque(new Vec3(0, $steeringTorque, 0));
+            $this->steerAngle += self::STEER_SPEED;
         }
 
         if ($this->inputContext->actions->isButtonDown('turnRight')) {
-            $this->carBodyRigidBody->applyTorque(new Vec3(0, -$steeringTorque, 0));
+            $this->steerAngle -= self::STEER_SPEED;
         }
+
+        $this->steerAngle = max(-self::MAX_STEER, min(self::MAX_STEER, $this->steerAngle));
+        $flWheelSusp->setServoTarget(self::STEER_AXIS, -$this->steerAngle);
+        $frWheelSusp->setServoTarget(self::STEER_AXIS, -$this->steerAngle);
 
         // update the physics world
         $this->physicsWorld->stepSimulation(1 / 60);
